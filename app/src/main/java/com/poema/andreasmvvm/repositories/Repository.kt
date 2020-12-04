@@ -6,15 +6,13 @@ import androidx.lifecycle.MutableLiveData
 import com.poema.andreasmvvm.api.ApiClient
 import com.poema.andreasmvvm.dataclasses.Drinks
 import com.poema.andreasmvvm.dataclasses.Drink
-import com.poema.andreasmvvm.utils.Utility.hideProgressBar
-import com.poema.andreasmvvm.utils.Utility.showProgressBar
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 object Repository {
 
-    fun getMutableLiveData(context: Context,letter:String) : MutableLiveData<ArrayList<Drink>>{
+    fun getMutableLiveData(letter:String) : MutableLiveData<ArrayList<Drink>>{
 
         val mutableLiveData = MutableLiveData<ArrayList<Drink>>()
 

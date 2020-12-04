@@ -9,7 +9,7 @@ import com.poema.andreasmvvm.repositories.Repository
 import com.poema.andreasmvvm.utils.Utility.isInternetAvailable
 
 
-class DrinksViewModel(private val context: Context, letter:String) : ViewModel() {
+class DrinksViewModel(context: Context, letter:String) : ViewModel() {
 
 
     //skapar tom (mutable) array av users som är livedata
@@ -22,7 +22,7 @@ class DrinksViewModel(private val context: Context, letter:String) : ViewModel()
         }
         if (context.isInternetAvailable()) {
 
-            listData = drinkRepository.getMutableLiveData(context,letter)
+            listData = drinkRepository.getMutableLiveData(letter)
         }
     }
 
