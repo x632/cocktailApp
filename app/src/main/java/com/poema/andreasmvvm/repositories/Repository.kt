@@ -12,15 +12,15 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-object UserRepository {
+object Repository {
 
-    fun getMutableLiveData(context: Context) : MutableLiveData<ArrayList<Drink>>{
+    fun getMutableLiveData(context: Context,letter:String) : MutableLiveData<ArrayList<Drink>>{
 
         val mutableLiveData = MutableLiveData<ArrayList<Drink>>()
 
         context.showProgressBar()
         //ApiClient.apiService.getUsers().enqueue(object : Callback<MutableList<Drinks>> {
-        ApiClient.apiService.getDrinksByLetter("l").enqueue(object : Callback<Drinks> {
+        ApiClient.apiService.getDrinksByLetter(letter).enqueue(object : Callback<Drinks> {
             override fun onFailure(call: Call<Drinks>, t: Throwable) {
                 hideProgressBar()
                 Log.e("error", t.localizedMessage!!)
@@ -37,7 +37,7 @@ object UserRepository {
                 for (drink in myDrinks?.drinks!!){
                     //println("!!! article: $article \n\n")
                         tempArray.add (drink)
-                    println("!!! This is the drinks all parameters: $drink")
+                    println("!!! Drinkobjektets parametrar: $drink")
 
                     }
                 mutableLiveData.value = tempArray as ArrayList<Drink>

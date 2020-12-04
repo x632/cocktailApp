@@ -5,8 +5,10 @@ import android.os.Bundle
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide.init
 import com.poema.andreasmvvm.adapters.DrinksAdapter
 import com.poema.andreasmvvm.dataclasses.Drink
+import com.poema.andreasmvvm.repositories.Repository
 import com.poema.andreasmvvm.viewmodel.DrinksViewModel
 import com.poema.andreasmvvm.viewmodel.DrinksViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
@@ -15,6 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var listDrinks: MutableList<Drink>
     private lateinit var adapter: DrinksAdapter
+    var letter = "a"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +33,6 @@ class MainActivity : AppCompatActivity() {
         val myViewModel = ViewModelProviders.of(this, DrinksViewModelFactory(this)).get(DrinksViewModel::class.java)
 
         myViewModel.getData().observe(this, { t ->
-
                 listDrinks.clear()
                 t?.let { listDrinks.addAll(it) }
                 adapter.notifyDataSetChanged()

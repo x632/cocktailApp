@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.Toast
-import com.poema.andreasmvvm.R
+import android.R
 
 
 object Utility {
@@ -35,7 +35,9 @@ object Utility {
     fun Context.showErrorToast(message: String?) {
 
         try {
-            val toast = Toast.makeText(applicationContext, message, Toast.LENGTH_LONG)
+            Toast.makeText(
+                this, message,
+                Toast.LENGTH_LONG).show()
 
             // set message color
            /* val textView = toast.view?.findViewById(android.R.id.message) as? TextView
@@ -47,7 +49,7 @@ object Utility {
 
             toast.setGravity(Gravity.TOP or Gravity.FILL_HORIZONTAL, 0, 0)*/
 
-            toast.show()
+
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -57,7 +59,7 @@ object Utility {
     // visa progressbar
     fun Context.showProgressBar() {
         try {
-            val layout = (this as? Activity)?.findViewById<View>(R.id.content)?.rootView as? ViewGroup
+            val layout = (this as? Activity)?.findViewById<View>(android.R.id.content)?.rootView as? ViewGroup
 
             progressBar = ProgressBar(this, null, R.attr.progressBarStyleLarge)
             progressBar?.let { it1 ->
