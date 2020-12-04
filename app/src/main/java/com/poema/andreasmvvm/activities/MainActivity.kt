@@ -1,23 +1,21 @@
-package com.poema.andreasmvvm
+package com.poema.andreasmvvm.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.widget.SearchView
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide.init
+import com.poema.andreasmvvm.R
 import com.poema.andreasmvvm.adapters.DrinksAdapter
 import com.poema.andreasmvvm.dataclasses.Drink
-import com.poema.andreasmvvm.repositories.Repository
+import com.poema.andreasmvvm.utils.Utility.hideProgressBar
 import com.poema.andreasmvvm.viewmodel.DrinksViewModel
-import com.poema.andreasmvvm.viewmodel.DrinksViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity() {
 
     private lateinit var listDrinks: MutableList<Drink>
     private lateinit var adapter: DrinksAdapter
-    var letter = "a"
+    var letter = "b"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,26 +26,27 @@ class MainActivity : AppCompatActivity() {
                 listDrinks
         )
         recyclerview.adapter = adapter
+        //val myViewModel = ViewModelProviders.of(this, DrinksViewModelFactory(this,letter)).get(DrinksViewModel::class.java)
 
-        //observer
-        val myViewModel = ViewModelProviders.of(this, DrinksViewModelFactory(this)).get(DrinksViewModel::class.java)
+        initSearchView(adapter)
 
-        myViewModel.getData().observe(this, { t ->
-                listDrinks.clear()
-                t?.let { listDrinks.addAll(it) }
-                adapter.notifyDataSetChanged()
-        })
-        //initSearchView(myViewModel)
     }
 
-    fun initSearchView(){
+    fun initSearchView(adapter: DrinksAdapter){
         val searchView = findViewById<SearchView>(R.id.search_view)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(p0: String?): Boolean {
-
+                showProgressBar(true)
+                letter = p0!!
+                val a = DrinksViewModel(this@MainActivity,letter)
+                a.getData().observe(this@MainActivity, { t ->
+                    listDrinks.clear()
+                    t?.let { listDrinks.addAll(it) }
+                    adapter.notifyDataSetChanged()
+                    showProgressBar(false)
+                })
                 return false
             }
-
             override fun onQueryTextChange(p0: String?): Boolean {
                 return false
             }

@@ -18,11 +18,10 @@ object Repository {
 
         val mutableLiveData = MutableLiveData<ArrayList<Drink>>()
 
-        context.showProgressBar()
-        //ApiClient.apiService.getUsers().enqueue(object : Callback<MutableList<Drinks>> {
+
+
         ApiClient.apiService.getDrinksByLetter(letter).enqueue(object : Callback<Drinks> {
             override fun onFailure(call: Call<Drinks>, t: Throwable) {
-                hideProgressBar()
                 Log.e("error", t.localizedMessage!!)
             }
 
@@ -30,7 +29,6 @@ object Repository {
                 call: Call<Drinks>,
                 response: Response<Drinks>
             ) {
-                hideProgressBar()
                 val drinksResponse = response.body()
                 val myDrinks : Drinks? = drinksResponse
                 val tempArray : MutableList<Drink> = mutableListOf()
@@ -42,10 +40,6 @@ object Repository {
                     }
                 mutableLiveData.value = tempArray as ArrayList<Drink>
             }
-                //usersResponse?.let { mutableLiveData.value = it as ArrayList<User> }
-
-            //}
-
         })
 
         return mutableLiveData
