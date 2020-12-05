@@ -16,10 +16,9 @@ object Repository {
 
         val mutableLiveData = MutableLiveData<ArrayList<Drink>>()
 
-
-
         ApiClient.apiService.getDrinksByLetter(letter).enqueue(object : Callback<Drinks> {
             override fun onFailure(call: Call<Drinks>, t: Throwable) {
+                println("!!!HAR VARIT I ON FAILURE!!!")
                 Log.e("error", t.localizedMessage!!)
             }
 
@@ -28,19 +27,21 @@ object Repository {
                 response: Response<Drinks>
             ) {
                 val drinksResponse = response.body()
-                val myDrinks : Drinks? = drinksResponse
-                val tempArray : MutableList<Drink> = mutableListOf()
-                for (drink in myDrinks?.drinks!!){
-                    //println("!!! article: $article \n\n")
-                        tempArray.add (drink)
-                    println("!!! Drinkobjektets parametrar: $drink")
 
+                    val myDrinks: Drinks? = drinksResponse
+                    val tempArray: MutableList<Drink> = mutableListOf()
+                    if (myDrinks?.drinks == null){println("!!! No Drinks!!!!")
+                        }
+                else {
+                        for (drink in myDrinks?.drinks!!) {
+                            tempArray.add(drink)
+                            println("!!! Drinkobjektets parametrar: $drink")
+                        }
                     }
-                mutableLiveData.value = tempArray as ArrayList<Drink>
+                    mutableLiveData.value = tempArray as ArrayList<Drink>
+
             }
         })
-
         return mutableLiveData
     }
-
 }

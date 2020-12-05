@@ -1,5 +1,7 @@
 package com.poema.andreasmvvm.activities
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ProgressBar
@@ -15,6 +17,7 @@ abstract class BaseActivity : AppCompatActivity() {
         val constraintLayout = layoutInflater.inflate(R.layout.activity_base, null) as ConstraintLayout
         val frameLayout = constraintLayout.findViewById<FrameLayout>(R.id.activity_content)
         progressBar = constraintLayout.findViewById(R.id.progress_bar)
+        progressBar.indeterminateTintList = ColorStateList.valueOf(Color.WHITE);
         layoutInflater.inflate(layoutResID, frameLayout, true)
         super.setContentView(constraintLayout)
     }

@@ -11,12 +11,13 @@ import com.poema.andreasmvvm.dataclasses.Drink
 import com.poema.andreasmvvm.viewmodel.DrinksViewModel
 import com.poema.andreasmvvm.viewmodel.DrinksViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlin.concurrent.timer
 
 class MainActivity : BaseActivity() {
 
     private lateinit var listDrinks: MutableList<Drink>
     private lateinit var adapter: DrinksAdapter
-    var letter = "c"
+    var letter = "a"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +28,7 @@ class MainActivity : BaseActivity() {
                 listDrinks
         )
         recyclerview.adapter = adapter
+        showProgressBar(true)
         val myViewModel = ViewModelProviders.of(this, DrinksViewModelFactory(this,letter)).get(DrinksViewModel::class.java)
 
         setObserver(myViewModel)

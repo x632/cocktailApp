@@ -3,9 +3,7 @@ package com.poema.andreasmvvm.utils
 import android.app.Activity
 import android.content.Context
 import android.net.ConnectivityManager
-import android.view.Gravity
-import android.view.View
-import android.view.ViewGroup
+
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.Toast
