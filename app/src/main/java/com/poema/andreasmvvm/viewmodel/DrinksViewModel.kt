@@ -13,19 +13,18 @@ import com.poema.andreasmvvm.utils.Utility.isInternetAvailable
 class DrinksViewModel(context: Context, letter:String) : ViewModel() {
 
     private var listData = MutableLiveData<ArrayList<Drink>>()
-
-        //skapar en instans av Repository
+    
+        //skapar en singleton instans av Repository
     init {
         val drinkRepository: Repository by lazy {
             Repository
         }
         if (context.isInternetAvailable()) {
-            listData = drinkRepository.getMutableLiveData(letter)
+            listData = drinkRepository.getMutableLiveData(letter,context)
         }
     }
 
-    fun getData(): MutableLiveData<ArrayList<Drink>> {
+    fun getData(context:Context): MutableLiveData<ArrayList<Drink>> {
         return listData
     }
-
 }

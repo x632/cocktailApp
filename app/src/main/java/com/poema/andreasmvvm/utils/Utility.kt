@@ -1,19 +1,17 @@
 package com.poema.andreasmvvm.utils
 
-import android.app.Activity
 import android.content.Context
 import android.net.ConnectivityManager
-
 import android.widget.ProgressBar
-import android.widget.RelativeLayout
 import android.widget.Toast
-import android.R
+import com.poema.andreasmvvm.activities.BaseActivity
 
 
 object Utility {
     private var progressBar: ProgressBar? = null
 
     fun Context.isInternetAvailable(): Boolean {
+
         try {
             val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val netInfo = cm.activeNetworkInfo
@@ -21,8 +19,10 @@ object Utility {
                 println("!!!VArit här i utils 'truevillkoret'")
                 true
             } else {
-                showErrorToast("Internet not available. Please try again!!")
+                showErrorToast("Internet not available. Please check your connection!")
+
                 false
+
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -34,8 +34,9 @@ object Utility {
 
         try {
             Toast.makeText(
-                this, message,
-                Toast.LENGTH_LONG).show()
+                applicationContext, message,
+                Toast.LENGTH_LONG
+            ).show()
 
             // set message color
            /* val textView = toast.view?.findViewById(android.R.id.message) as? TextView
@@ -49,7 +50,7 @@ object Utility {
 
 
         } catch (e: Exception) {
-            e.printStackTrace()
+           e.printStackTrace()
         }
 
     }

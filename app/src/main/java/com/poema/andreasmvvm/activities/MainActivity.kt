@@ -52,7 +52,7 @@ class MainActivity : BaseActivity() {
         })
     }
     fun setObserver(a:DrinksViewModel){
-        a.getData().observe(this@MainActivity, { t ->
+        a.getData(this).observe(this@MainActivity, { t ->
             listDrinks.clear()
             t?.let { listDrinks.addAll(it) }
             adapter.notifyDataSetChanged()
