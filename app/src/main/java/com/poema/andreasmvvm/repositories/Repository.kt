@@ -71,7 +71,8 @@ object Repository {
                 response: Response<Drinks>
             ) {
                 val drinksResponse = response.body()
-
+                val code = response.code()
+                println("!!! Responskoden: ${code}")
                 val myDrinks: Drinks? = drinksResponse
                 val tempArray: MutableList<Drink> = mutableListOf()
                 if (myDrinks?.drinks == null){
@@ -83,7 +84,6 @@ object Repository {
                     }
                 }
                 mutableLiveData.value = tempArray as ArrayList<Drink>
-
             }
         })
         return mutableLiveData
