@@ -20,7 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:id="@+id/search_view"
-                app:queryHint="first letter.."
+                app:queryHint="first letter of, or letters within drinkname.."
                 >
 
             </androidx.appcompat.widget.SearchView>

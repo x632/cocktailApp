@@ -80,7 +80,6 @@ object Repository {
                 } else {
                     for (drink in myDrinks.drinks) {
                         tempArray.add(drink)
-                        println("!!! Drinkobjektets parametrar: $drink")
                     }
                 }
                 mutableLiveData.value = tempArray as ArrayList<Drink>
