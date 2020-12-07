@@ -16,7 +16,7 @@ object Utility {
             val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val netInfo = cm.activeNetworkInfo
             return if (netInfo != null && netInfo.isConnected) {
-                println("!!!VArit här i utils 'truevillkoret'")
+                println("!!!Varit här i utils 'truevillkoret'")
                 true
             } else {
                 showErrorToast("Internet not available. Please check your connection!")

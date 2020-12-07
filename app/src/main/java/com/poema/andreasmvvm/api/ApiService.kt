@@ -10,4 +10,7 @@ interface ApiService {
         //api/json/v1/1/search.php?f=c
         @GET("api/json/v1/1/search.php")
         fun getDrinksByLetter(@Query("f") letter : String) : Call<Drinks>
+
+        @GET("api/json/v1/1/search.php")
+        fun getDrinksByName(@Query("s") letter : String) : Call<Drinks>
 }
