@@ -2,8 +2,6 @@ package com.poema.andreasmvvm.repositories
 
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
-import android.widget.Toast.makeText
 import androidx.lifecycle.MutableLiveData
 import com.poema.andreasmvvm.api.ApiClient
 import com.poema.andreasmvvm.dataclasses.Drinks
@@ -14,19 +12,17 @@ import retrofit2.Response
 
 object Repository {
 
-    fun getMutableLiveData(letter:String,context: Context) : MutableLiveData<ArrayList<Drink>>{
+    var errMessString = MutableLiveData<String>()
+
+    fun getMutableLiveData(letter:String) : MutableLiveData<ArrayList<Drink>>{
 
         val mutableLiveData = MutableLiveData<ArrayList<Drink>>()
-        //val errMessString = LiveData<String>
+
 
         ApiClient.apiService.getDrinksByLetter(letter).enqueue(object : Callback<Drinks> {
             override fun onFailure(call: Call<Drinks>, t: Throwable) {
-                println("!!!HAR VARIT I ON FAILURE!!!")
                 Log.e("error", t.localizedMessage!!)
-                onError(t)
-                //errMessString.value = t.localizedMessage!!
-                makeText(context,t.localizedMessage!!, Toast.LENGTH_LONG
-                ).show()
+                errMessString.value = t.localizedMessage!!.toString()
             }
 
             override fun onResponse(
@@ -38,28 +34,24 @@ object Repository {
                     val myDrinks: Drinks? = drinksResponse
                     val tempArray: MutableList<Drink> = mutableListOf()
                     if (myDrinks?.drinks == null){
-                        makeText(context,"There are no drinks starting with that letter!", Toast.LENGTH_LONG
-                        ).show()
-                        } else {
+                        errMessString.value = "There are no drinks starting with that letter!"
+                        } else {errMessString.value = ""
                         for (drink in myDrinks.drinks) {
                             tempArray.add(drink)
-                            //println("!!! Drinkobjektets parametrar: $drink")
+                            println("!!! Drinkobjektets parametrar: $drink")
                         }
                     }
                     mutableLiveData.value = tempArray as ArrayList<Drink>
-
                 }
         })
         return mutableLiveData
     }
-    fun otherFunction(letter:String, context: Context):MutableLiveData<ArrayList<Drink>>{
+    fun otherFunction(letter:String):MutableLiveData<ArrayList<Drink>>{
         val mutableLiveData = MutableLiveData<ArrayList<Drink>>()
         ApiClient.apiService.getDrinksByName(letter).enqueue(object : Callback<Drinks> {
             override fun onFailure(call: Call<Drinks>, t: Throwable) {
                 Log.e("error", t.localizedMessage!!)
-                //errMessString.value = t.localizedMessage!!
-                makeText(context,t.localizedMessage!!, Toast.LENGTH_LONG
-                ).show()
+                errMessString.value = t.localizedMessage!!
             }
 
             override fun onResponse(
@@ -72,9 +64,9 @@ object Repository {
                 val myDrinks: Drinks? = drinksResponse
                 val tempArray: MutableList<Drink> = mutableListOf()
                 if (myDrinks?.drinks == null){
-                    makeText(context,"There are no drinks with those letters!", Toast.LENGTH_LONG
-                    ).show()
+                    errMessString.value = "There are no drinks containing those letters!"
                 } else {
+                    errMessString.value = ""
                     for (drink in myDrinks.drinks) {
                         tempArray.add(drink)
                     }
@@ -84,9 +76,5 @@ object Repository {
         })
         return mutableLiveData
 
-    }
-    fun onError(t: Throwable) {
-        //set timer
-        //go again 3 times
     }
 }

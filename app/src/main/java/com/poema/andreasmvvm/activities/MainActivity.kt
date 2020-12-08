@@ -1,23 +1,22 @@
 package com.poema.andreasmvvm.activities
 
-import androidx.appcompat.app.AppCompatActivity
+
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.poema.andreasmvvm.R
 import com.poema.andreasmvvm.adapters.DrinksAdapter
 import com.poema.andreasmvvm.dataclasses.Drink
 import com.poema.andreasmvvm.viewmodel.DrinksViewModel
-import com.poema.andreasmvvm.viewmodel.DrinksViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlin.concurrent.timer
+
 
 class MainActivity : BaseActivity() {
 
     private lateinit var listDrinks: MutableList<Drink>
     private lateinit var adapter: DrinksAdapter
-    var letter = "a"
+    private var errorMessage: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,21 +27,22 @@ class MainActivity : BaseActivity() {
                 listDrinks
         )
         recyclerview.adapter = adapter
-        showProgressBar(true)
-        val myViewModel = ViewModelProviders.of(this, DrinksViewModelFactory(this,letter)).get(DrinksViewModel::class.java)
 
-        setObserver(myViewModel)
-        initSearchView()
+       /* val myViewModel = ViewModelProviders.of(this, DrinksViewModelFactory(this,letter)).get(DrinksViewModel::class.java)
+
+        setObserver(myViewModel)*/
+        val viewModel = DrinksViewModel(this@MainActivity,"")
+        setErrStringObserver(viewModel)
+        initSearch()
     }
 
-    fun initSearchView(){
+    fun initSearch(){
         val searchView = findViewById<SearchView>(R.id.search_view)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 showProgressBar(true)
-                letter = p0!!
-                val a = DrinksViewModel(this@MainActivity,letter)
-                setObserver(a)
+                val newInstance = DrinksViewModel(this@MainActivity,p0!!)
+                setObserver(newInstance)
                 return false
             }
             override fun onQueryTextChange(p0: String?): Boolean {
@@ -51,14 +51,25 @@ class MainActivity : BaseActivity() {
 
         })
     }
-    fun setObserver(a:DrinksViewModel){
-        a.getData(this).observe(this@MainActivity, { t ->
+    private fun setObserver(newInstance: DrinksViewModel){
+        newInstance.listData.observe(this@MainActivity, { t ->
             listDrinks.clear()
             t?.let { listDrinks.addAll(it) }
             adapter.notifyDataSetChanged()
             showProgressBar(false)
         })
+    }
 
+    private fun setErrStringObserver(viewModel:DrinksViewModel){
+        viewModel.otherData.observe(this@MainActivity, { t->
+           errorMessage = t
+            if (errorMessage != ""){
+                Toast.makeText(this,errorMessage, Toast.LENGTH_SHORT
+                ).show()
+                showProgressBar(false)
+
+            }
+        })
     }
 }
 

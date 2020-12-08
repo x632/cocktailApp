@@ -46,6 +46,7 @@ dependencies {
     implementation "androidx.cardview:cardview:$cardview_version"
         //noinspection GradleCompatible
         implementation 'com.android.support:design:28.1.1'
-
+    //ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
 
 }
