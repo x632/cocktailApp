@@ -20,9 +20,7 @@ object Utility {
                 true
             } else {
                 showErrorToast("Internet not available. Please check your connection!")
-
                 false
-
             }
         } catch (e: Exception) {
             e.printStackTrace()

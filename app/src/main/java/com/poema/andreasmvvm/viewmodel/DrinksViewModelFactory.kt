@@ -3,6 +3,7 @@ package com.poema.andreasmvvm.viewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+/*
 
 class DrinksViewModelFactory (private val context: Context,var letta:String) : ViewModelProvider.NewInstanceFactory() {
 
@@ -10,4 +11,4 @@ class DrinksViewModelFactory (private val context: Context,var letta:String) : V
         return DrinksViewModel(context, letter = letta) as T
     }
 
-}
+}*/
