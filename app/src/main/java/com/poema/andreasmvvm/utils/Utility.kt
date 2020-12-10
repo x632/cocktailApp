@@ -30,7 +30,7 @@ object Utility {
 
     fun Context.showErrorToast(message: String?) {
 
-        try {
+      /*  try {*/
             Toast.makeText(
                 applicationContext, message,
                 Toast.LENGTH_LONG
@@ -46,10 +46,9 @@ object Utility {
 
             toast.setGravity(Gravity.TOP or Gravity.FILL_HORIZONTAL, 0, 0)*/
 
-
-        } catch (e: Exception) {
+       /* } catch (e: Exception) {
            e.printStackTrace()
-        }
+        }*/
 
     }
 }

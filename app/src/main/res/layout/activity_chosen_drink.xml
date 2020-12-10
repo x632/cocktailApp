@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    tools:context=".activities.ChosenDrinkActivity">
+
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="Header"
+        android:textColor="#ffffff"
+        android:textSize="35dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_picture"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tv_header_ingred"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Ingredients"
+        android:textColor="#ffffff"
+        app:layout_constraintStart_toStartOf="@+id/iv_picture"
+        app:layout_constraintTop_toBottomOf="@+id/iv_picture" />
+
+    <TextView
+        android:id="@+id/tv_ingred"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Ingredients:"
+        android:textColor="#45A2FF"
+        app:layout_constraintStart_toStartOf="@+id/tv_header_ingred"
+        app:layout_constraintTop_toBottomOf="@+id/tv_header_ingred" />
+
+    <TextView
+        android:id="@+id/tv_header_instruct"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Instructions:"
+        android:textColor="#ffffff"
+        app:layout_constraintStart_toStartOf="@+id/tv_ingred"
+        app:layout_constraintTop_toBottomOf="@+id/tv_ingred" />
+
+    <TextView
+        android:id="@+id/tv_instructions"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Instructions"
+        android:textColor="#45A2FF"
+        app:layout_constraintStart_toStartOf="@+id/tv_header_instruct"
+        app:layout_constraintTop_toBottomOf="@+id/tv_header_instruct" />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
