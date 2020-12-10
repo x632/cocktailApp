@@ -1,6 +1,7 @@
 package com.poema.andreasmvvm.viewmodel
 
 import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.poema.andreasmvvm.activities.BaseActivity
