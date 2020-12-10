@@ -1,6 +1,7 @@
 package com.poema.andreasmvvm.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.poema.andreasmvvm.R
+import com.poema.andreasmvvm.activities.ChosenDrinkActivity
 import com.poema.andreasmvvm.dataclasses.Drink
+import com.poema.andreasmvvm.utils.Datamanager
 
 
 class DrinksAdapter(private val context: Context, private var list: MutableList<Drink>) : RecyclerView.Adapter<DrinksAdapter.ViewHolder>() {
@@ -50,7 +53,10 @@ class DrinksAdapter(private val context: Context, private var list: MutableList<
 
         init {
                itemView.setOnClickListener {
-                   println("!!! Har klickat på position $adapterPosition")
+                   println("!!! Har klickat på ${Datamanager.drinks[adapterPosition]}")
+                   val intent = Intent(context, ChosenDrinkActivity::class.java)
+                   intent.putExtra("pos", adapterPosition)
+                   context.startActivity(intent)
                 }
             }
     }
