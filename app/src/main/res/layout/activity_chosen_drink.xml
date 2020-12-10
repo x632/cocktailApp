@@ -39,15 +39,25 @@
         android:textColor="#ffffff"
         app:layout_constraintStart_toStartOf="@+id/iv_picture"
         app:layout_constraintTop_toBottomOf="@+id/iv_picture" />
+    <TextView
+        android:id="@+id/tv_measure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Measurements"
+        android:textColor="#45A2FF"
+        app:layout_constraintStart_toStartOf="@+id/tv_header_ingred"
+        app:layout_constraintTop_toBottomOf="@+id/tv_header_ingred" />
 
     <TextView
         android:id="@+id/tv_ingred"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:text="Ingredients:"
         android:textColor="#45A2FF"
-        app:layout_constraintStart_toStartOf="@+id/tv_header_ingred"
+        app:layout_constraintStart_toEndOf="@+id/tv_measure"
         app:layout_constraintTop_toBottomOf="@+id/tv_header_ingred" />
 
     <TextView
@@ -56,7 +66,7 @@
         android:layout_height="wrap_content"
         android:text="Instructions:"
         android:textColor="#ffffff"
-        app:layout_constraintStart_toStartOf="@+id/tv_ingred"
+        app:layout_constraintStart_toStartOf="@+id/tv_measure"
         app:layout_constraintTop_toBottomOf="@+id/tv_ingred" />
 
     <TextView
@@ -66,7 +76,7 @@
         android:layout_marginTop="20dp"
         android:text="Instructions"
         android:textColor="#45A2FF"
-        app:layout_constraintStart_toStartOf="@+id/tv_header_instruct"
+        app:layout_constraintStart_toStartOf="@+id/tv_measure"
         app:layout_constraintTop_toBottomOf="@+id/tv_header_instruct" />
 
 
