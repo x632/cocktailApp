@@ -57,7 +57,6 @@ class MainActivity : BaseActivity() {
             override fun onQueryTextChange(p0: String?): Boolean {
                 return false
             }
-
         })
     }
     private fun setObserver(newInstance: DrinksViewModel){
