@@ -1,10 +1,13 @@
 package com.poema.andreasmvvm.activities
 
 
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.poema.andreasmvvm.R
@@ -48,7 +51,8 @@ class MainActivity : BaseActivity() {
                 showProgressBar(true)
                 val newInstance = DrinksViewModel(this@MainActivity, p0!!)
                 setObserver(newInstance)
-                return true
+                setConnectionObserver(newInstance)
+                return false
             }
             override fun onQueryTextChange(p0: String?): Boolean {
                 return false
@@ -74,8 +78,14 @@ class MainActivity : BaseActivity() {
                 Toast.makeText(this,errorMessage, Toast.LENGTH_SHORT
                 ).show()
                 showProgressBar(false)
-
             }
+        })
+    }
+    private fun setConnectionObserver(viewModel:DrinksViewModel){
+        viewModel.iConnection.observe(this@MainActivity, { t->
+            val connection = t
+            showProgressBar(false)
+            println("!!!! Intrnetstatus har ändrats (fr MainActivity: $connection")
         })
     }
 }

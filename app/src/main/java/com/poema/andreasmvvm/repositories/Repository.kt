@@ -13,9 +13,10 @@ import retrofit2.Response
 object Repository {
 
     var errMessString = MutableLiveData<String>()
+    var iConnection = MutableLiveData<Boolean>()
 
     fun getMutableLiveData(letter:String) : MutableLiveData<ArrayList<Drink>>{
-
+        iConnection.value = true
         val mutableLiveData = MutableLiveData<ArrayList<Drink>>()
 
 
@@ -38,7 +39,6 @@ object Repository {
                         } else {errMessString.value = ""
                         for (drink in myDrinks.drinks) {
                             tempArray.add(drink)
-                            println("!!! Drinkobjektets parametrar: $drink")
                         }
                     }
                     mutableLiveData.value = tempArray as ArrayList<Drink>
@@ -47,6 +47,7 @@ object Repository {
         return mutableLiveData
     }
     fun otherFunction(letter:String):MutableLiveData<ArrayList<Drink>>{
+        iConnection.value = true
         val mutableLiveData = MutableLiveData<ArrayList<Drink>>()
         ApiClient.apiService.getDrinksByName(letter).enqueue(object : Callback<Drinks> {
             override fun onFailure(call: Call<Drinks>, t: Throwable) {
