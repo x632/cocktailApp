@@ -1,22 +1,20 @@
 package com.poema.andreasmvvm.activities
 
 
-import android.app.Activity
-import android.content.Context
 import android.os.Bundle
-import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.poema.andreasmvvm.R
 import com.poema.andreasmvvm.adapters.DrinksAdapter
 import com.poema.andreasmvvm.dataclasses.Drink
 import com.poema.andreasmvvm.utils.Datamanager
-import com.poema.andreasmvvm.viewmodel.DrinksViewModel
+import com.poema.andreasmvvm.viewmodel.MainViewModel
 import com.poema.andreasmvvm.viewmodel.DrinksViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.*
 
 
 class MainActivity : BaseActivity() {
@@ -24,7 +22,6 @@ class MainActivity : BaseActivity() {
     private lateinit var listDrinks: MutableList<Drink>
     private lateinit var adapter: DrinksAdapter
     private var errorMessage: String = ""
-    private var letter = "a"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,21 +34,23 @@ class MainActivity : BaseActivity() {
 
         recyclerview.adapter = adapter
 
-       val myViewModel = ViewModelProviders.of(this, DrinksViewModelFactory(this@MainActivity,letter)).get(DrinksViewModel::class.java)
-
+       //val myViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        val myViewModel = ViewModelProviders.of(this, DrinksViewModelFactory(this@MainActivity)).get(MainViewModel::class.java)
         setErrStringObserver(myViewModel)
         setObserver(myViewModel)
         initSearch(myViewModel)
+        setConnectionObserver(myViewModel)
     }
 
-    fun initSearch(viewModel:DrinksViewModel){
+    fun initSearch(viewModel:MainViewModel){
         val searchView = findViewById<SearchView>(R.id.search_view)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(p0: String?): Boolean {
                 showProgressBar(true)
-                val newInstance = DrinksViewModel(this@MainActivity, p0!!)
-                setObserver(newInstance)
-                setConnectionObserver(newInstance)
+                viewModel.setLetta(p0!!)
+                /*val newInstance = MainViewModel(this@MainActivity)*/
+                //setObserver(viewModel)
+                //setConnectionObserver(viewModel)
                 return false
             }
             override fun onQueryTextChange(p0: String?): Boolean {
@@ -59,8 +58,8 @@ class MainActivity : BaseActivity() {
             }
         })
     }
-    private fun setObserver(newInstance: DrinksViewModel){
-        newInstance.getData().observe(this@MainActivity, { t ->
+    private fun setObserver(newInstance: MainViewModel){
+        newInstance.getData()?.observe(this@MainActivity, { t ->
             listDrinks.clear()
             Datamanager.drinks.clear()
             t?.let {it -> Datamanager.drinks.addAll(it)}
@@ -70,7 +69,7 @@ class MainActivity : BaseActivity() {
         })
     }
 
-    private fun setErrStringObserver(viewModel:DrinksViewModel){
+    private fun setErrStringObserver(viewModel:MainViewModel){
         viewModel.getString().observe(this@MainActivity, { t->
            errorMessage = t
             if (errorMessage != ""){
@@ -80,13 +79,14 @@ class MainActivity : BaseActivity() {
             }
         })
     }
-    private fun setConnectionObserver(viewModel:DrinksViewModel){
-        viewModel.iConnection.observe(this@MainActivity, { t->
+    private fun setConnectionObserver(viewModel:MainViewModel){
+        viewModel.getBoolean().observe(this@MainActivity, { t->
             val connection = t
             showProgressBar(false)
             println("!!!! Intrnetstatus har ändrats (fr MainActivity: $connection")
         })
     }
 }
+
 
 

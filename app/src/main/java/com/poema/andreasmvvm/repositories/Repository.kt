@@ -1,7 +1,9 @@
 package com.poema.andreasmvvm.repositories
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.util.Log
+import android.util.LruCache
 import androidx.lifecycle.MutableLiveData
 import com.poema.andreasmvvm.api.ApiClient
 import com.poema.andreasmvvm.dataclasses.Drinks
@@ -39,6 +41,7 @@ object Repository {
                         } else {errMessString.value = ""
                         for (drink in myDrinks.drinks) {
                             tempArray.add(drink)
+                            println("!!! drinken: $drink")
                         }
                     }
                     mutableLiveData.value = tempArray as ArrayList<Drink>
@@ -54,7 +57,6 @@ object Repository {
                 Log.e("error", t.localizedMessage!!)
                 errMessString.value = t.localizedMessage!!
             }
-
             override fun onResponse(
                 call: Call<Drinks>,
                 response: Response<Drinks>
@@ -77,5 +79,11 @@ object Repository {
         })
         return mutableLiveData
 
+    }
+    fun getErrorMessage(a:String):MutableLiveData<String>{
+        return errMessString
+    }
+    fun getiConnection(a:String):MutableLiveData<Boolean>{
+        return iConnection
     }
 }
