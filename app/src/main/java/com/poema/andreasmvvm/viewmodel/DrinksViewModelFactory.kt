@@ -5,10 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
 
-class DrinksViewModelFactory (val context: Context, var letta:String) : ViewModelProvider.NewInstanceFactory() {
+class DrinksViewModelFactory (val context: Context) : ViewModelProvider.NewInstanceFactory() {
 
-    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return DrinksViewModel(context, letter = letta) as T
+   override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return MainViewModel(context) as T
     }
 
 }

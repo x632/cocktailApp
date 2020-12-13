@@ -54,17 +54,13 @@ class ChosenDrinkActivity : AppCompatActivity() {
         tv_measure.text = measurementStr
     }
 
-
     private fun showImage(pos: Int) {
         Glide.with(this)
             .load(Datamanager.drinks[pos].strDrinkThumb).apply(RequestOptions.circleCropTransform())
             .into(iv_picture)
     }
 
-
     private fun showInstructions(pos: Int){
         tv_instructions.text = Datamanager.drinks[pos].strInstructions
     }
-
-
 }
