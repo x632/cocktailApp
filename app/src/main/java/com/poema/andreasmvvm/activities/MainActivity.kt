@@ -35,25 +35,21 @@ class MainActivity : BaseActivity() {
         recyclerview.adapter = adapter
 
        //val myViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-<<<<<<< HEAD
-        val myViewModel = ViewModelProviders.of(this, DrinksViewModelFactory(this@MainActivity)).get(MainViewModel::class.java)
-        setErrStringObserver(myViewModel)
-        setObserver(myViewModel)
-        initSearch(myViewModel)
-        setConnectionObserver(myViewModel)
+
+      
 
         db = DrinksRoom.getInstance(applicationContext)
 
 
         room()
 
-=======
+
         myViewModel = ViewModelProviders.of(this, DrinksViewModelFactory(this@MainActivity)).get(MainViewModel::class.java)
         setErrStringObserver()
         setObserver()
         initSearch()
         setConnectionObserver()
->>>>>>> parent of a474e52... Merge pull request #6 from x632/Feature-/-RoomDatabase
+
     }
 
     fun initSearch(viewModel:MainViewModel){
@@ -82,14 +78,11 @@ class MainActivity : BaseActivity() {
             showProgressBar(false)
         })
     }
-<<<<<<< HEAD
-    private fun setErrStringObserver(viewModel:MainViewModel){
-        viewModel.getString().observe(this@MainActivity, { t->
-=======
 
+  
     private fun setErrStringObserver(){
         myViewModel.getString().observe(this@MainActivity, { t->
->>>>>>> parent of a474e52... Merge pull request #6 from x632/Feature-/-RoomDatabase
+
            errorMessage = t
             if (errorMessage != ""){
                 Toast.makeText(this,errorMessage, Toast.LENGTH_SHORT
