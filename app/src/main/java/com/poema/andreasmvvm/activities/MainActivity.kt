@@ -7,6 +7,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.apicall.db.AppDatabase
+import com.example.apicall.db.TestDrink
 import com.poema.andreasmvvm.R
 import com.poema.andreasmvvm.adapters.DrinksAdapter
 import com.poema.andreasmvvm.dataclasses.Drink
@@ -23,6 +25,8 @@ class MainActivity : BaseActivity() {
     private lateinit var listDrinks: MutableList<Drink>
     private lateinit var adapter: DrinksAdapter
     private var errorMessage: String = ""
+
+    private lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +45,11 @@ class MainActivity : BaseActivity() {
         setObserver()
         initSearch()
         setConnectionObserver()
+
+        db = DrinksRoom.getInstance(applicationContext)
+
+
+        room()
     }
 
     fun initSearch(){
@@ -88,6 +97,26 @@ class MainActivity : BaseActivity() {
             showProgressBar(false)}
             println("!!!! Internetstatus har ändrats (fr MainActivity: $connection")
         })
+    }
+
+    fun room() {
+        println("emil enter room function")
+
+        val drink2 = TestDrink("vodka", 5, true)
+        val drink1 = TestDrink("gin", 19, true)
+        val drink3 = TestDrink("sprite", 1, false)
+
+        println("emil created the drinks")
+
+        GlobalScope.launch {
+            db.drinkDao().deleteAll()
+            db.drinkDao().insert(drink1)
+            // db.drinkDao().delete(drink1)
+            val drinks: List<TestDrink> = db.drinkDao().getAllDrinks()
+            for (drink in drinks) {
+                println("emil get all drinks ${drink}")
+            }
+        }
     }
 }
 
