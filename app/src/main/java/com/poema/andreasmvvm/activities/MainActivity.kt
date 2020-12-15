@@ -4,10 +4,9 @@ package com.poema.andreasmvvm.activities
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.apicall.db.AppDatabase
-import com.example.apicall.db.TestDrink
 import com.poema.andreasmvvm.R
 import com.poema.andreasmvvm.adapters.DrinksAdapter
 import com.poema.andreasmvvm.dataclasses.Drink
@@ -24,8 +23,6 @@ class MainActivity : BaseActivity() {
     private lateinit var adapter: DrinksAdapter
     private var errorMessage: String = ""
 
-    private lateinit var db: AppDatabase
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -38,6 +35,7 @@ class MainActivity : BaseActivity() {
         recyclerview.adapter = adapter
 
        //val myViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+<<<<<<< HEAD
         val myViewModel = ViewModelProviders.of(this, DrinksViewModelFactory(this@MainActivity)).get(MainViewModel::class.java)
         setErrStringObserver(myViewModel)
         setObserver(myViewModel)
@@ -49,6 +47,13 @@ class MainActivity : BaseActivity() {
 
         room()
 
+=======
+        myViewModel = ViewModelProviders.of(this, DrinksViewModelFactory(this@MainActivity)).get(MainViewModel::class.java)
+        setErrStringObserver()
+        setObserver()
+        initSearch()
+        setConnectionObserver()
+>>>>>>> parent of a474e52... Merge pull request #6 from x632/Feature-/-RoomDatabase
     }
 
     fun initSearch(viewModel:MainViewModel){
@@ -77,8 +82,14 @@ class MainActivity : BaseActivity() {
             showProgressBar(false)
         })
     }
+<<<<<<< HEAD
     private fun setErrStringObserver(viewModel:MainViewModel){
         viewModel.getString().observe(this@MainActivity, { t->
+=======
+
+    private fun setErrStringObserver(){
+        myViewModel.getString().observe(this@MainActivity, { t->
+>>>>>>> parent of a474e52... Merge pull request #6 from x632/Feature-/-RoomDatabase
            errorMessage = t
             if (errorMessage != ""){
                 Toast.makeText(this,errorMessage, Toast.LENGTH_SHORT
@@ -93,26 +104,6 @@ class MainActivity : BaseActivity() {
             showProgressBar(false)
             println("!!!! Intrnetstatus har ändrats (fr MainActivity: $connection")
         })
-    }
-
-    fun room() {
-        println("emil enter room function")
-
-        val drink2 = TestDrink("vodka", 5, true)
-        val drink1 = TestDrink("gin", 19, true)
-        val drink3 = TestDrink("sprite", 1, false)
-
-        println("emil created the drinks")
-
-        GlobalScope.launch {
-            db.drinkDao().deleteAll()
-            db.drinkDao().insert(drink1)
-           // db.drinkDao().delete(drink1)
-            val drinks: List<TestDrink> = db.drinkDao().getAllDrinks()
-            for (drink in drinks) {
-                println("emil get all drinks ${drink}")
-            }
-        }
     }
 }
 
