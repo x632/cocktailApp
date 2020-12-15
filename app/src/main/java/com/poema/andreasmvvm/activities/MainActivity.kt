@@ -47,8 +47,6 @@ class MainActivity : BaseActivity() {
         setConnectionObserver()
 
         db = DrinksRoom.getInstance(applicationContext)
-
-
         room()
     }
 
