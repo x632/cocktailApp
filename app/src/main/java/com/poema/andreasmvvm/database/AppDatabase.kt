@@ -1,10 +1,12 @@
-package com.example.apicall.db
+package com.poema.andreasmvvm.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.poema.andreasmvvm.dataclasses.Drink
 import com.poema.andreasmvvm.dataclasses.Drinks
+import com.poema.andreasmvvm.dataclasses.TestDrink
 
-@Database(entities = [TestDrink::class], version = 2)
+@Database(entities = [Drink::class], version = 8)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun drinkDao(): DrinkDao
 }

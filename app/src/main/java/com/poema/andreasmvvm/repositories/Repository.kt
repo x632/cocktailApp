@@ -41,7 +41,6 @@ object Repository {
                         } else {errMessString.value = ""
                         for (drink in myDrinks.drinks) {
                             tempArray.add(drink)
-                            println("!!! drinken: $drink")
                         }
                     }
                     mutableLiveData.value = tempArray as ArrayList<Drink>
