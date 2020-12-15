@@ -6,5 +6,7 @@ import com.poema.andreasmvvm.dataclasses.Drinks
 
 object Datamanager {
     var drinks = mutableListOf<Drink>()
+
+
 }
 
