@@ -67,7 +67,7 @@ object Repository {
                 val myDrinks: Drinks? = drinksResponse
                 val tempArray: MutableList<Drink> = mutableListOf()
                 if (myDrinks?.drinks == null){
-                    errMessString.value = "There are no drinks containing those letters!"
+                    errMessString.value = "There are no drinks with those letters!"
                 } else {
                     errMessString.value = ""
                     for (drink in myDrinks.drinks) {
