@@ -19,7 +19,6 @@ import kotlinx.coroutines.*
 
 class MainActivity : BaseActivity() {
 
-    lateinit private var myViewModel: MainViewModel
     private lateinit var listDrinks: MutableList<Drink>
     private lateinit var adapter: DrinksAdapter
     private var errorMessage: String = ""
@@ -36,40 +35,43 @@ class MainActivity : BaseActivity() {
         recyclerview.adapter = adapter
 
        //val myViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
+
         myViewModel = ViewModelProviders.of(this, DrinksViewModelFactory(this@MainActivity)).get(MainViewModel::class.java)
         setErrStringObserver()
         setObserver()
         initSearch()
         setConnectionObserver()
+
     }
 
-    fun initSearch(){
+    fun initSearch(viewModel:MainViewModel){
         val searchView = findViewById<SearchView>(R.id.search_view)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(p0: String?): Boolean {
-                if(p0!!.isEmpty())return false
-                else{
                 showProgressBar(true)
-                myViewModel.setLetta(p0!!)
-                return false}
-
+                viewModel.setLetta(p0!!)
+                /*val newInstance = MainViewModel(this@MainActivity)*/
+                //setObserver(viewModel)
+                //setConnectionObserver(viewModel)
+                return false
             }
             override fun onQueryTextChange(p0: String?): Boolean {
                 return false
             }
         })
     }
-
-    private fun setObserver(){
-        myViewModel.getData()?.observe(this@MainActivity, { t ->
+    private fun setObserver(newInstance: MainViewModel){
+        newInstance.getData()?.observe(this@MainActivity, { t ->
             listDrinks.clear()
             Datamanager.drinks.clear()
-            t.let { it -> Datamanager.drinks.addAll(it)}
-            t.let { it -> listDrinks.addAll(it)}
+            t?.let {it -> Datamanager.drinks.addAll(it)}
+            t?.let { it -> listDrinks.addAll(it)}
             adapter.notifyDataSetChanged()
             showProgressBar(false)
         })
     }
+
 
     private fun setErrStringObserver(){
         myViewModel.getString().observe(this@MainActivity, { t->
@@ -81,12 +83,11 @@ class MainActivity : BaseActivity() {
             }
         })
     }
-    private fun setConnectionObserver(){
-        myViewModel.getBoolean().observe(this@MainActivity, { t->
+    private fun setConnectionObserver(viewModel:MainViewModel){
+        viewModel.getBoolean().observe(this@MainActivity, { t->
             val connection = t
-            if (connection == false){
-            showProgressBar(false)}
-            println("!!!! Internetstatus har ändrats (fr MainActivity: $connection")
+            showProgressBar(false)
+            println("!!!! Intrnetstatus har ändrats (fr MainActivity: $connection")
         })
     }
 }
