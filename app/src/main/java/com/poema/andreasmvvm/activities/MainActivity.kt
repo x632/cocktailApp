@@ -36,13 +36,6 @@ class MainActivity : BaseActivity() {
 
        //val myViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 
-      
-
-        db = DrinksRoom.getInstance(applicationContext)
-
-
-        room()
-
 
         myViewModel = ViewModelProviders.of(this, DrinksViewModelFactory(this@MainActivity)).get(MainViewModel::class.java)
         setErrStringObserver()
@@ -79,10 +72,9 @@ class MainActivity : BaseActivity() {
         })
     }
 
-  
+
     private fun setErrStringObserver(){
         myViewModel.getString().observe(this@MainActivity, { t->
-
            errorMessage = t
             if (errorMessage != ""){
                 Toast.makeText(this,errorMessage, Toast.LENGTH_SHORT
