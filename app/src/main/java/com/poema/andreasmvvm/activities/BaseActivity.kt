@@ -23,7 +23,9 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     fun showProgressBar(visibility: Boolean) {
-        println("!!! Varit i progressbar")
+        if (visibility){ println("!!! Satt på progressbar")}else{
+            println("!!! Stängt av progressbar")
+        }
         progressBar.visibility = if (visibility) View.VISIBLE else View.INVISIBLE
     }
 }

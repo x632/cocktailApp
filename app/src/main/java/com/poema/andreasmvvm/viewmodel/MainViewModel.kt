@@ -41,29 +41,6 @@ class MainViewModel(context:Context) : ViewModel() {
         Repository.getiConnection(it)
     } as MutableLiveData<Boolean>
 
-
-    /*
-      init {
-          val drinkRepository: Repository by lazy {
-              Repository
-          }
-          //iConnection.value = true
-          otherData = drinkRepository.errMessString
-          }*/
-
-/*
-        if (context.isInternetAvailable() && letter.length < 2 && letter.length > 0) {
-            listData = drinkRepository.getMutableLiveData(letter)
-        } else if (context.isInternetAvailable() && letter.length > 1){
-            listData = drinkRepository.otherFunction(letter)
-        } else{
-            iConnection.value = false
-
-            println("!!!! Värdet har ändrats till (fr viewmodel): ${iConnection.value}")
-        }
-    }
-*/
-
     fun getData(): LiveData<ArrayList<Drink>>? {
         return listData
     }
@@ -77,7 +54,7 @@ class MainViewModel(context:Context) : ViewModel() {
 
     fun setLetta(letta: String){
         val update = letta
-       /* if (_letta.value == update) {
+      /* if (_letta.value == update) {
             return
         }*/
         _letta.value = update
