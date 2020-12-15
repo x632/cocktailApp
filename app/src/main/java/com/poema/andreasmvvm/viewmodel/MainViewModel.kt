@@ -23,6 +23,7 @@ class MainViewModel(context:Context) : ViewModel() {
     //private var otherData = MutableLiveData<String>()
     //var iConnection = MutableLiveData<Boolean>()
 
+    // obsarverar text inmatning av user
     val listData: LiveData<ArrayList<Drink>>? = Transformations.switchMap(_letta) {
         if (context.isInternetAvailable() && it.length < 2 && it.length > 0) {
             Repository.getMutableLiveData(it)
