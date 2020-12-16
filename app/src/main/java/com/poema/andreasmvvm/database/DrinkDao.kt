@@ -1,23 +1,26 @@
-@file:Suppress("AndroidUnresolvedRoomSqlReference")
 
-package com.poema.andreasmvvm.db
+package com.poema.andreasmvvm.database
 
 import androidx.room.*
+import com.poema.andreasmvvm.dataclasses.Drink
+import com.poema.andreasmvvm.dataclasses.TestDrink
 
-@Dao// data acces object
+
+@Dao// data access object
 interface DrinkDao {
-    @Query("SELECT * FROM testdrink")
-    fun getAllDrinks(): List<TestDrink>
+    @Query("SELECT * FROM Drink ORDER BY strDrink ASC")
+    fun getAllDrinks(): List<Drink>
 
     @Insert
-    fun insert(vararg testDrink: TestDrink)
+   fun insert(drink: Drink):Long
 
     @Delete
-    fun delete(testDrink: TestDrink)
+    fun delete(drink: Drink)
 
-    @Query("DELETE FROM testdrink")
+    @Query("DELETE FROM Drink")
     fun deleteAll()
 
-
+    @Query("SELECT * FROM Drink WHERE idDrink LIKE :drinkId ")
+    fun findDrinkById(drinkId: String) : Drink
 
 }

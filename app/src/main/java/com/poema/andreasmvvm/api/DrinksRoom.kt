@@ -1,6 +1,8 @@
 import android.content.Context
 import androidx.room.Room
-import com.poema.andreasmvvm.db.AppDatabase
+
+import com.poema.andreasmvvm.database.AppDatabase
+
 
 object DrinksRoom {
 
@@ -12,7 +14,6 @@ object DrinksRoom {
                 if (!::INSTANCE.isInitialized) {
                     INSTANCE = Room.databaseBuilder(context.applicationContext,
                         AppDatabase::class.java,
-
                         "drinksRoom").fallbackToDestructiveMigration().build()
                 }
             }

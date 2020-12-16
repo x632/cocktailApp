@@ -2,9 +2,7 @@ package com.poema.andreasmvvm.utils
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.widget.ProgressBar
 import android.widget.Toast
-import com.poema.andreasmvvm.activities.BaseActivity
 
 
 object Utility {
