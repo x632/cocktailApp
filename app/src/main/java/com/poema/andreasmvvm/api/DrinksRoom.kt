@@ -12,7 +12,6 @@ object DrinksRoom {
                 if (!::INSTANCE.isInitialized) {
                     INSTANCE = Room.databaseBuilder(context.applicationContext,
                         AppDatabase::class.java,
-
                         "drinksRoom").fallbackToDestructiveMigration().build()
                 }
             }
