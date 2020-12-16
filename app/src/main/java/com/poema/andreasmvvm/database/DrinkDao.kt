@@ -1,9 +1,8 @@
 @file:Suppress("AndroidUnresolvedRoomSqlReference")
 
-package com.example.apicall.db
+package com.poema.andreasmvvm.db
 
 import androidx.room.*
-import com.poema.andreasmvvm.dataclasses.Drink
 
 @Dao// data acces object
 interface DrinkDao {
