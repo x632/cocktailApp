@@ -1,8 +1,10 @@
+
 package com.poema.andreasmvvm.database
 
 import androidx.room.*
 import com.poema.andreasmvvm.dataclasses.Drink
 import com.poema.andreasmvvm.dataclasses.TestDrink
+
 
 @Dao// data access object
 interface DrinkDao {
@@ -20,7 +22,5 @@ interface DrinkDao {
 
     @Query("SELECT * FROM Drink WHERE idDrink LIKE :drinkId ")
     fun findDrinkById(drinkId: String) : Drink
-
-
 
 }

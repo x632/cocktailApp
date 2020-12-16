@@ -10,6 +10,8 @@ import com.poema.andreasmvvm.R
 import com.poema.andreasmvvm.adapters.DrinksAdapter
 import com.poema.andreasmvvm.database.AppDatabase
 import com.poema.andreasmvvm.dataclasses.Drink
+import com.poema.andreasmvvm.db.AppDatabase
+import com.poema.andreasmvvm.db.TestDrink
 import com.poema.andreasmvvm.utils.Datamanager
 import com.poema.andreasmvvm.viewmodel.MainViewModel
 import com.poema.andreasmvvm.viewmodel.DrinksViewModelFactory
