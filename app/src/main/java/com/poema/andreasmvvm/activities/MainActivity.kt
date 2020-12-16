@@ -15,7 +15,6 @@ import com.poema.andreasmvvm.viewmodel.MainViewModel
 import com.poema.andreasmvvm.viewmodel.DrinksViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.Main
 import kotlin.coroutines.CoroutineContext
 
 
@@ -130,7 +129,7 @@ class MainActivity() : BaseActivity(),CoroutineScope {
             compareWithCashe(counter2)
         }
     }
-    
+
     private fun getAllDrinks() : Deferred<List<Drink>> =
         async(Dispatchers.IO) {
             db.drinkDao().getAllDrinks()
