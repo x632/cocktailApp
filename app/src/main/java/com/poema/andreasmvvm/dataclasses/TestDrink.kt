@@ -1,4 +1,4 @@
-package com.example.apicall.db
+package com.poema.andreasmvvm.db
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

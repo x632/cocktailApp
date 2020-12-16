@@ -7,11 +7,11 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.apicall.db.AppDatabase
-import com.example.apicall.db.TestDrink
 import com.poema.andreasmvvm.R
 import com.poema.andreasmvvm.adapters.DrinksAdapter
 import com.poema.andreasmvvm.dataclasses.Drink
+import com.poema.andreasmvvm.db.AppDatabase
+import com.poema.andreasmvvm.db.TestDrink
 import com.poema.andreasmvvm.utils.Datamanager
 import com.poema.andreasmvvm.viewmodel.MainViewModel
 import com.poema.andreasmvvm.viewmodel.DrinksViewModelFactory
