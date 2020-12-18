@@ -12,7 +12,7 @@ interface DrinkDao {
     fun getAllDrinks(): List<Drink>
 
     @Insert
-   fun insert(drink: Drink):Long
+    fun insert(drink: Drink):Long
 
     @Delete
     fun delete(drink: Drink)
@@ -20,7 +20,7 @@ interface DrinkDao {
     @Query("DELETE FROM Drink")
     fun deleteAll()
 
-    @Query("SELECT * FROM Drink WHERE idDrink LIKE :drinkId ")
+    @Query("SELECT * FROM Drink WHERE idDrink = :drinkId LIMIT 1" )
     fun findDrinkById(drinkId: String) : Drink
 
 }

@@ -34,7 +34,6 @@ class ChosenDrinkActivity : AppCompatActivity() {
         if (Datamanager.drinks[pos].strIngredient7 != null){ ingredStr += "${Datamanager.drinks[pos].strIngredient7}\n"}
         if (Datamanager.drinks[pos].strIngredient8 != null){ ingredStr += "${Datamanager.drinks[pos].strIngredient8}\n"}
         if (Datamanager.drinks[pos].strIngredient9 != null){ ingredStr += "${Datamanager.drinks[pos].strIngredient9}\n"}
-        if (Datamanager.drinks[pos].strIngredient10 != null){ ingredStr += "${Datamanager.drinks[pos].strIngredient10}\n"}
         tv_ingred.text = ingredStr
     }
 
@@ -49,7 +48,6 @@ class ChosenDrinkActivity : AppCompatActivity() {
         if (Datamanager.drinks[pos].strMeasure7 != null) {measurementStr += "${Datamanager.drinks[pos].strMeasure7}\n"}
         if (Datamanager.drinks[pos].strMeasure8 != null) {measurementStr += "${Datamanager.drinks[pos].strMeasure8}\n"}
         if (Datamanager.drinks[pos].strMeasure9 != null) {measurementStr += "${Datamanager.drinks[pos].strMeasure9}\n"}
-        if (Datamanager.drinks[pos].strMeasure10 != null) {measurementStr += "${Datamanager.drinks[pos].strMeasure10}\n"}
 
         tv_measure.text = measurementStr
     }

@@ -8,7 +8,7 @@ import com.poema.andreasmvvm.dataclasses.Drinks
 import com.poema.andreasmvvm.dataclasses.TestDrink
 
 
-@Database(entities = [Drink::class], version = 12)
+@Database(entities = [Drink::class], version = 28)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun drinkDao(): DrinkDao
 }

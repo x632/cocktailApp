@@ -10,23 +10,23 @@ import com.poema.andreasmvvm.R
 import com.poema.andreasmvvm.adapters.DrinksAdapter
 import com.poema.andreasmvvm.database.AppDatabase
 import com.poema.andreasmvvm.dataclasses.Drink
-import com.poema.andreasmvvm.db.AppDatabase
-import com.poema.andreasmvvm.db.TestDrink
+import com.poema.andreasmvvm.dataclasses.RoomArray
 import com.poema.andreasmvvm.utils.Datamanager
+import com.poema.andreasmvvm.utils.Utility.isInternetAvailable
 import com.poema.andreasmvvm.viewmodel.MainViewModel
 import com.poema.andreasmvvm.viewmodel.DrinksViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
+import android.content.Context
 
-
-class MainActivity() : BaseActivity(),CoroutineScope {
+class MainActivity() : BaseActivity(), CoroutineScope {
 
     private lateinit var job: Job
     private lateinit var db: AppDatabase
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.Main + job
-    lateinit private var myViewModel: MainViewModel
+    private lateinit var myViewModel: MainViewModel
     private lateinit var listDrinks: MutableList<Drink>
     private lateinit var adapter: DrinksAdapter
     private var errorMessage: String = ""
@@ -38,7 +38,7 @@ class MainActivity() : BaseActivity(),CoroutineScope {
         recyclerview.layoutManager = LinearLayoutManager(this@MainActivity)
         listDrinks = mutableListOf()
         job = Job()
-        db = DrinksRoom.getInstance(applicationContext)
+        db = DrinksRoom.getInstance(this)
         adapter = DrinksAdapter(
             this,
             listDrinks
@@ -53,7 +53,26 @@ class MainActivity() : BaseActivity(),CoroutineScope {
         setObserver()
         initSearch()
         setConnectionObserver()
-
+    }
+    private fun setErrStringObserver() {
+        myViewModel.getString().observe(this@MainActivity, { t ->
+            errorMessage = t
+            if (errorMessage != "") {
+                Toast.makeText(
+                    this, errorMessage, Toast.LENGTH_SHORT
+                ).show()
+                showProgressBar(false)
+            }
+        })
+    }
+    private fun setConnectionObserver() {
+        myViewModel.getBoolean().observe(this@MainActivity, { t ->
+            val connection = t
+            if (connection == false) {
+                showProgressBar(false)
+            }
+            println("!!!! Internetstatus har ändrats (fr MainActivity: $connection")
+        })
     }
 
     fun initSearch() {
@@ -63,12 +82,17 @@ class MainActivity() : BaseActivity(),CoroutineScope {
                 if (p0!!.isEmpty()) return false
                 else {
                     showProgressBar(true)
+                    val conn : Boolean = (this@MainActivity.isInternetAvailable())
+                    if (!conn){
+                    getCashedDrinks(p0)
+                        return false
+                    }
+                    else{
                     myViewModel.setLetta(p0)
+                    }
                     return false
                 }
-
             }
-
             override fun onQueryTextChange(p0: String?): Boolean {
                 return false
             }
@@ -87,49 +111,85 @@ class MainActivity() : BaseActivity(),CoroutineScope {
                 println("!!! Inte hittat nått!")
             } else {
                 //deleteEverything()
-                //showCashedDrinks()
-               compareWithCashe(0)
+                createCache()
+                //getCashedDrinks()
             }
         })
     }
 
-    private fun compareWithCashe(counter: Int) {
-        val lengthOfArray = Datamanager.drinks.size
-        println("Length of Array: $lengthOfArray, counter: $counter")
-        if (counter < Datamanager.drinks.size) {
-            val drinkId = "${Datamanager.drinks[counter].idDrink}"
-            val drink = Datamanager.drinks[counter]
-            checkIfDrinkAlreadyCashed(drinkId, drink, counter)
-        }
+    private fun createCache(){
 
-    }
-
-    fun checkIfDrinkAlreadyCashed(id: String, drinkObject: Drink, counter: Int) {
-        var drink: Drink?
-        async(Dispatchers.IO)
-        {
-            drink = db.drinkDao().findDrinkById(id)
-            if (drink == null) {
-                val numb1 = db.drinkDao().insert(drinkObject)
-                println("!!! Did not find the drink (number: $numb1) in cash so it was cashed now")
-                switchToMain(counter)
-            }
-            else {
-                println("!!! Drink already cached")
-
-                switchToMain(counter)
+        async(Dispatchers.IO) {
+            for (i in 0 until listDrinks.size) {
+                val id = "${listDrinks[i].idDrink}"
+                val numb = db.drinkDao().findDrinkById(id)       //insert(listDrinks[i])
+                if (numb == null) {
+                    val savedDrinkNum = db.drinkDao().insert(listDrinks[i])
+                    println("!!! Drink: ${listDrinks[i].strDrink} with number $savedDrinkNum is saved in cache. number is $i")
+                    println("!!! Arraysize is :${listDrinks.size}")
+                } else {
+                    println("!!! Drink: ${listDrinks[i].strDrink} is already in cache number is $i")
+                    println("!!! Arraysize is :${listDrinks.size}")
+                }
             }
         }
-
     }
 
-    private suspend fun switchToMain(counter: Int){
-        var counter2 = counter
-        withContext(Dispatchers.Main){
-            //println("!!!Varit i c handlern ")
-            counter2 ++
-            compareWithCashe(counter2)
+    fun getCashedDrinks(str:String) {
+        RoomArray.drinks.clear()
+        val allDrinks  = getAllDrinks()
+        launch {
+            allDrinks.await().forEach {
+                println("!!! Drink in cashe : ${it.strDrink}")
+                RoomArray.drinks.add(it)
+            }
+            checkStringOnCache(str)
         }
+    }
+
+    private fun checkStringOnCache(str:String) {
+        if (str.length in 1..1){
+           serachCacheByLetter(str)
+        }
+        else {
+            searchCacheByName(str)
+        }
+    }
+
+    private fun searchCacheByName(str:String) {
+        var str1 = str.decapitalize()
+        println("!!! Been in search Cache by name!")
+        listDrinks.clear()
+        Datamanager.drinks.clear()
+        for (drink in RoomArray.drinks){
+            var str2 = drink.strDrink!!
+            str2 = str2.decapitalize()
+            if(str2.contains(str1)){
+                listDrinks.add(drink)
+                Datamanager.drinks.add(drink)
+            }
+            adapter.notifyDataSetChanged()
+            showProgressBar(false)
+        }
+    }
+
+    private fun serachCacheByLetter(str:String) {
+       println("!!! Been in search cache by letter!")
+        listDrinks.clear()
+        Datamanager.drinks.clear()
+        var str1 = str.decapitalize()
+        for (drink in RoomArray.drinks) {
+            var str2 = drink.strDrink!!.slice(0..0)
+            str2 = str2.decapitalize()
+            if (str2 == str1) {
+                listDrinks.add(drink)
+                Datamanager.drinks.add(drink)
+                println("!!! these are the drinks it was supposed to get from Cache: ${drink.strDrink}")
+            }
+        }
+        adapter.notifyDataSetChanged()
+        RoomArray.drinks.clear()
+        showProgressBar(false)
     }
 
     private fun getAllDrinks() : Deferred<List<Drink>> =
@@ -137,60 +197,18 @@ class MainActivity() : BaseActivity(),CoroutineScope {
             db.drinkDao().getAllDrinks()
         }
 
-    fun showCashedDrinks() {
-        println("!!! Varit i showCashedDrinks")
-        val allDrinks  = getAllDrinks()
-        launch {
-            allDrinks.await().forEach {
-              println("!!! Drink in cashe : ${it.strDrink}")
-            }
-        }
+    private suspend fun switchToMain(){
+        withContext(Dispatchers.Main){
+           // compareWithCache(counter2)
+       }
     }
 
-    private fun setErrStringObserver() {
-        myViewModel.getString().observe(this@MainActivity, { t ->
-            errorMessage = t
-            if (errorMessage != "") {
-                Toast.makeText(
-                    this, errorMessage, Toast.LENGTH_SHORT
-                ).show()
-                showProgressBar(false)
-            }
-        })
-    }
-
-    private fun setConnectionObserver() {
-        myViewModel.getBoolean().observe(this@MainActivity, { t ->
-            val connection = t
-            if (connection == false) {
-                showProgressBar(false)
-            }
-            println("!!!! Internetstatus har ändrats (fr MainActivity: $connection")
-        })
-    }
     private fun deleteEverything(){
         async(Dispatchers.IO) {db.drinkDao().deleteAll()}
         println("!!! All deleted!")
     }
 
-/*    fun room() {
-        println("!!! emil enter room function")
 
-            val drink0 = Datamanager.drinks[0]
-            val drink1 = Datamanager.drinks[1]
-
-
-            GlobalScope.launch {
-               db.drinkDao().deleteAll()
-               val numb1 = db.drinkDao().insert(drink0)
-                val numb2 = db.drinkDao().insert(drink1)
-                println("!!! Numren i databasen: $numb1 och $numb2")
-             val drinks: List<Drink> = db.drinkDao().getAllDrinks()
-               for (drink in drinks) {
-                   println("!!! Drinks from room name: ${drink.strDrink} and drink id: ${drink.idDrink}")
-                }
-            }
-        }*/
 }
 
 

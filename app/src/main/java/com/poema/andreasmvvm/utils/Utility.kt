@@ -7,6 +7,7 @@ import android.widget.Toast
 
 object Utility {
 
+
     fun Context.isInternetAvailable(): Boolean {
 
             val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
