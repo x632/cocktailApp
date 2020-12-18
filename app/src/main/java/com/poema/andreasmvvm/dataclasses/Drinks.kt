@@ -2,6 +2,7 @@ package com.poema.andreasmvvm.dataclasses
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import org.jetbrains.annotations.NotNull
 
 @Entity
 data class Drinks(
@@ -9,34 +10,33 @@ data class Drinks(
 )
 @Entity
 data class Drink(
-    @PrimaryKey
-    val dateModified: String,
-    val idDrink: String? = null,
-    val strAlcoholic: String? = null,
-    val strCategory: String? = null,
-    val strCreativeCommonsConfirmed: String? = null,
-    val strDrink: String? = null,
-    val strDrinkThumb: String? = null,
-    val strGlass: String? = null,
-    val strIngredient1: String? = null,
-    val strIngredient10: String? = null,
-    val strIngredient2: String? = null,
-    val strIngredient3: String? = null,
-    val strIngredient4: String? = null,
-    val strIngredient5: String? = null,
-    val strIngredient6: String? = null,
-    val strIngredient7: String? = null,
-    val strIngredient8: String? = null,
-    val strIngredient9: String? = null,
-    val strInstructions: String? = null,
-    val strMeasure1: String? = null,
-    val strMeasure10: String? = null,
-    val strMeasure2: String? = null,
-    val strMeasure3: String? = null,
-    val strMeasure4: String? = null,
-    val strMeasure5: String? = null,
-    val strMeasure6: String? = null,
-    val strMeasure7: String? = null,
-    val strMeasure8: String? = null,
-    val strMeasure9: String? = null,
+    @PrimaryKey(autoGenerate = true)
+    val roomId:Long,
+    val dateModified: String?,
+    val idDrink: String?,
+    val strAlcoholic: String?,
+    val strCategory: String?,
+    val strCreativeCommonsConfirmed: String?,
+    val strDrink: String?,
+    val strDrinkThumb: String?,
+    val strGlass: String?,
+    val strIngredient1: String?,
+    val strIngredient2: String?,
+    val strIngredient3: String?,
+    val strIngredient4: String?,
+    val strIngredient5: String?,
+    val strIngredient6: String?,
+    val strIngredient7: String?,
+    val strIngredient8: String?,
+    val strIngredient9: String?,
+    val strInstructions: String?,
+    val strMeasure1: String?,
+    val strMeasure2: String?,
+    val strMeasure3: String?,
+    val strMeasure4: String?,
+    val strMeasure5: String?,
+    val strMeasure6: String?,
+    val strMeasure7: String?,
+    val strMeasure8: String?,
+    val strMeasure9: String?
 )

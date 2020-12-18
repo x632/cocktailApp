@@ -6,13 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.poema.andreasmvvm.activities.BaseActivity
 import com.poema.andreasmvvm.dataclasses.Drink
-import com.poema.andreasmvvm.dataclasses.Drinks
 import com.poema.andreasmvvm.repositories.Repository
-import com.poema.andreasmvvm.utils.Datamanager
 import com.poema.andreasmvvm.utils.Utility.isInternetAvailable
-import java.sql.DatabaseMetaData
+
 
 
 class MainViewModel(context:Context) : ViewModel() {
@@ -22,6 +19,7 @@ class MainViewModel(context:Context) : ViewModel() {
     //private var listData = MutableLiveData<ArrayList<Drink>>()
     //private var otherData = MutableLiveData<String>()
     //var iConnection = MutableLiveData<Boolean>()
+
 
     val listData: LiveData<ArrayList<Drink>>? = Transformations.switchMap(_letta) {
         if (context.isInternetAvailable() && it.length < 2 && it.length > 0) {
@@ -34,11 +32,11 @@ class MainViewModel(context:Context) : ViewModel() {
     }
 
     val otherData: MutableLiveData<String> = Transformations.switchMap(_letta) {
-        Repository.getErrorMessage(it)
+        Repository.getErrorMessage()
     } as MutableLiveData<String>
 
     val iConnection: MutableLiveData<Boolean> = Transformations.switchMap(_letta) {
-        Repository.getiConnection(it)
+        Repository.getiConnection()
     } as MutableLiveData<Boolean>
 
 
@@ -82,5 +80,8 @@ class MainViewModel(context:Context) : ViewModel() {
         }*/
         _letta.value = update
     }
+
+
+
 }
 
