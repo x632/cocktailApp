@@ -192,6 +192,19 @@ class MainActivity() : BaseActivity(), CoroutineScope {
         showProgressBar(false)
     }
 
+    fun sortArray(drinklist: IntArray) {
+        for (pass in 0 until (drinklist.size - 1)) {
+            for (currentPosition in 0 until (drinklist.size - pass - 1)) {
+                if (drinklist[currentPosition] > drinklist[currentPosition + 1]) {
+                    val tmp = drinklist[currentPosition]
+                    drinklist[currentPosition] = drinklist[currentPosition + 1]
+                    drinklist[currentPosition + 1] = tmp
+                }
+            }
+        }
+        println("EMIL:: ${drinklist}")
+    }
+
     private fun getAllDrinks() : Deferred<List<Drink>> =
         async(Dispatchers.IO) {
             db.drinkDao().getAllDrinks()

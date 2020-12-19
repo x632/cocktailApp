@@ -1,6 +1,6 @@
 package com.poema.andreasmvvm.utils
 
-object RegistrationUtilTest {
+object CheckListForCharUtilTest {
 
 //veta ifall stringen inhåller char sequens
 
