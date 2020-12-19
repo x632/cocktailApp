@@ -5,10 +5,10 @@ import androidx.room.*
 import com.poema.andreasmvvm.dataclasses.Drink
 import com.poema.andreasmvvm.dataclasses.TestDrink
 
-
+//ORDER BY strDrink ASC
 @Dao// data access object
 interface DrinkDao {
-    @Query("SELECT * FROM Drink ORDER BY strDrink ASC")
+    @Query("SELECT * FROM Drink")
     fun getAllDrinks(): List<Drink>
 
     @Insert

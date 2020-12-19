@@ -18,7 +18,6 @@ import com.poema.andreasmvvm.viewmodel.DrinksViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
-import android.content.Context
 
 class MainActivity() : BaseActivity(), CoroutineScope {
 
@@ -49,7 +48,7 @@ class MainActivity() : BaseActivity(), CoroutineScope {
         //val myViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         myViewModel = ViewModelProviders.of(this, DrinksViewModelFactory(this@MainActivity))
             .get(MainViewModel::class.java)
-        setErrStringObserver()
+        setErrStringObserver()//tar emot eventuella felmeddanden från repositoryn
         setObserver()
         initSearch()
         setConnectionObserver()
@@ -75,7 +74,7 @@ class MainActivity() : BaseActivity(), CoroutineScope {
         })
     }
 
-    fun initSearch() {
+    private fun initSearch() {
         val searchView = findViewById<SearchView>(R.id.search_view)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(p0: String?): Boolean {
@@ -110,9 +109,8 @@ class MainActivity() : BaseActivity(), CoroutineScope {
             if (Datamanager.drinks.isEmpty()) {
                 println("!!! Inte hittat nått!")
             } else {
-                //deleteEverything()
+                //deleteCache()
                 createCache()
-                //getCashedDrinks()
             }
         })
     }
@@ -135,18 +133,6 @@ class MainActivity() : BaseActivity(), CoroutineScope {
         }
     }
 
-    fun getCashedDrinks(str:String) {
-        RoomArray.drinks.clear()
-        val allDrinks  = getAllDrinks()
-        launch {
-            allDrinks.await().forEach {
-                println("!!! Drink in cashe : ${it.strDrink}")
-                RoomArray.drinks.add(it)
-            }
-            checkStringOnCache(str)
-        }
-    }
-
     private fun checkStringOnCache(str:String) {
         if (str.length in 1..1){
            serachCacheByLetter(str)
@@ -158,7 +144,6 @@ class MainActivity() : BaseActivity(), CoroutineScope {
 
     private fun searchCacheByName(str:String) {
         var str1 = str.decapitalize()
-        println("!!! Been in search Cache by name!")
         listDrinks.clear()
         Datamanager.drinks.clear()
         for (drink in RoomArray.drinks){
@@ -174,7 +159,6 @@ class MainActivity() : BaseActivity(), CoroutineScope {
     }
 
     private fun serachCacheByLetter(str:String) {
-       println("!!! Been in search cache by letter!")
         listDrinks.clear()
         Datamanager.drinks.clear()
         var str1 = str.decapitalize()
@@ -184,12 +168,50 @@ class MainActivity() : BaseActivity(), CoroutineScope {
             if (str2 == str1) {
                 listDrinks.add(drink)
                 Datamanager.drinks.add(drink)
-                println("!!! these are the drinks it was supposed to get from Cache: ${drink.strDrink}")
             }
         }
         adapter.notifyDataSetChanged()
         RoomArray.drinks.clear()
         showProgressBar(false)
+    }
+
+    fun getCashedDrinks(str:String) {
+        RoomArray.drinks.clear()
+        val allDrinks  = getAllDrinks()
+        launch {
+            allDrinks.await().forEach {
+                println("!!! Drink in cashe : ${it.strDrink}")
+                RoomArray.drinks.add(it)
+            }
+            sortArray(str)
+        }
+    }
+
+    private fun sortArray(str:String) {
+        val newList : MutableList<String> = mutableListOf()
+        val tempList : MutableList<Drink> = mutableListOf()
+        var stringArray : Array<String> = arrayOf<String>()
+        // skapar en mutable list med bara drinknamnen
+       for (drink in RoomArray.drinks){
+            newList.add(drink.strDrink!!)
+            }
+        // gör den till en "typad" array (med fixerad storlek)
+        stringArray = newList.toTypedArray()
+        // tar emot den sorterade mutable(!) listan med drinknamn (strängar)
+        val theSortedDrinks : MutableList<String> = main(stringArray)
+        //går igenom varje cashad drink mot hela listan med sorterade drinknamn
+        // om den hittar samma namn som i drinkobjektet så lägger den dem i tempListan.
+        for (i in 0 until RoomArray.drinks.size){
+            for (j in 0 until RoomArray.drinks.size) {
+                if (theSortedDrinks[i] == RoomArray.drinks[j].strDrink!!) {
+                    tempList.add(RoomArray.drinks[j])
+                }
+            }
+        }
+        //tömmer cashade listan och skapar den igen med de nu sorterade drinkobjekten
+        RoomArray.drinks.clear()
+        RoomArray.drinks = tempList
+        checkStringOnCache(str)
     }
 
     private fun getAllDrinks() : Deferred<List<Drink>> =
@@ -199,15 +221,42 @@ class MainActivity() : BaseActivity(), CoroutineScope {
 
     private suspend fun switchToMain(){
         withContext(Dispatchers.Main){
-           // compareWithCache(counter2)
+           // går till huvudtråden i allDrinksAwait (tror jag) så denna func kommer nog inte behövas
        }
     }
 
-    private fun deleteEverything(){
-        async(Dispatchers.IO) {db.drinkDao().deleteAll()}
+    private fun deleteCache(){
+        async(Dispatchers.IO) {
+            db.drinkDao().deleteAll()
+        }
         println("!!! All deleted!")
     }
 
+    fun sortStrings(arr: Array<String>, arraySize: Int) {
+        var temp: String
+
+        for (j in 0 until arraySize - 1) {
+            for (i in j + 1 until arraySize) {
+                if (arr[j] > arr[i]) {
+                    temp = arr[j]
+                    arr[j] = arr[i]
+                    arr[i] = temp
+                }
+            }
+        }
+    }
+
+    private fun main(args: Array<String>):MutableList<String> {
+        var sortedArray : MutableList<String> = mutableListOf()
+        val arr = args
+        val arraySize = arr.size
+        sortStrings(arr, arraySize)
+        for (i in 0 until arraySize) {
+            println("!!! String " + (i + 1) + " is " + arr[i])
+            sortedArray.add(arr[i])
+        }
+       return sortedArray
+    }
 
 }
 

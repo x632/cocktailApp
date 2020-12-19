@@ -6,13 +6,19 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import com.poema.andreasmvvm.database.AppDatabase
 import com.poema.andreasmvvm.dataclasses.Drink
 import com.poema.andreasmvvm.repositories.Repository
 import com.poema.andreasmvvm.utils.Utility.isInternetAvailable
-
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlin.coroutines.CoroutineContext
 
 
 class MainViewModel(context:Context) : ViewModel() {
+
+
 
     private val _letta: MutableLiveData<String> = MutableLiveData()
     //private val _search: MutableLiveData<String> = MutableLiveData()
@@ -22,7 +28,7 @@ class MainViewModel(context:Context) : ViewModel() {
 
 
     val listData: LiveData<ArrayList<Drink>>? = Transformations.switchMap(_letta) {
-        if (context.isInternetAvailable() && it.length < 2 && it.length > 0) {
+        if (context.isInternetAvailable() && it.length < 2 && it.isNotEmpty()) {
             Repository.getMutableLiveData(it)
         } else if (context.isInternetAvailable() && it.length>1 && it != "fav") {
             Repository.otherFunction(it)
