@@ -17,6 +17,7 @@ import com.poema.andreasmvvm.viewmodel.MainViewModel
 import com.poema.andreasmvvm.viewmodel.DrinksViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
+import java.util.*
 import kotlin.coroutines.CoroutineContext
 import android.content.Context
 import android.preference.PreferenceManager
@@ -29,6 +30,7 @@ import javax.crypto.Cipher
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
+
 
 class MainActivity() : BaseActivity(), CoroutineScope {
 
@@ -67,14 +69,15 @@ class MainActivity() : BaseActivity(), CoroutineScope {
 
         recyclerview.adapter = adapter
 
-        //val myViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        //val myViewModel = ViewModelProvider(this).get(MainViewModel::class.java) // inte möjligt att få in medlemsvariabler till viewmodel med denna
         myViewModel = ViewModelProviders.of(this, DrinksViewModelFactory(this@MainActivity))
             .get(MainViewModel::class.java)
         setErrStringObserver()
-        setObserver()
+        setObserver()//observerar huvuddatat
         initSearch()
         setConnectionObserver()
     }
+
     private fun setErrStringObserver() {
         myViewModel.getString().observe(this@MainActivity, { t ->
             errorMessage = t
@@ -95,21 +98,21 @@ class MainActivity() : BaseActivity(), CoroutineScope {
             println("!!!! Internetstatus har ändrats (fr MainActivity: $connection")
         })
     }
-
-    fun initSearch() {
+    //huvudfunktionen
+    private fun initSearch() {
         val searchView = findViewById<SearchView>(R.id.search_view)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(p0: String?): Boolean {
-                if (p0!!.isEmpty()) return false
+            override fun onQueryTextSubmit(letter: String?): Boolean {
+                if (letter!!.isEmpty()) return false
                 else {
                     showProgressBar(true)
                     val conn : Boolean = (this@MainActivity.isInternetAvailable())
                     if (!conn){
-                    getCashedDrinks(p0)
+                    getCashedDrinks(letter)
                         return false
                     }
                     else{
-                    myViewModel.setLetta(p0)
+                    myViewModel.setLetter(letter)
                     }
                     return false
                 }
@@ -131,9 +134,8 @@ class MainActivity() : BaseActivity(), CoroutineScope {
             if (Datamanager.drinks.isEmpty()) {
                 println("!!! Inte hittat nått!")
             } else {
-                //deleteEverything()
+                //deleteCache()
                 createCache()
-                //getCashedDrinks()
             }
         })
     }
@@ -156,18 +158,6 @@ class MainActivity() : BaseActivity(), CoroutineScope {
         }
     }
 
-    fun getCashedDrinks(str:String) {
-        RoomArray.drinks.clear()
-        val allDrinks  = getAllDrinks()
-        launch {
-            allDrinks.await().forEach {
-                println("!!! Drink in cashe : ${it.strDrink}")
-                RoomArray.drinks.add(it)
-            }
-            checkStringOnCache(str)
-        }
-    }
-
     private fun checkStringOnCache(str:String) {
         if (str.length in 1..1){
            serachCacheByLetter(str)
@@ -178,13 +168,12 @@ class MainActivity() : BaseActivity(), CoroutineScope {
     }
 
     private fun searchCacheByName(str:String) {
-        var str1 = str.decapitalize()
-        println("!!! Been in search Cache by name!")
+        var str1 = str.decapitalize(Locale.ROOT)
         listDrinks.clear()
         Datamanager.drinks.clear()
         for (drink in RoomArray.drinks){
             var str2 = drink.strDrink!!
-            str2 = str2.decapitalize()
+            str2 = str2.decapitalize(Locale.ROOT)
             if(str2.contains(str1)){
                 listDrinks.add(drink)
                 Datamanager.drinks.add(drink)
@@ -195,22 +184,56 @@ class MainActivity() : BaseActivity(), CoroutineScope {
     }
 
     private fun serachCacheByLetter(str:String) {
-       println("!!! Been in search cache by letter!")
         listDrinks.clear()
         Datamanager.drinks.clear()
-        var str1 = str.decapitalize()
+        var str1 = str.decapitalize(Locale.ROOT)
         for (drink in RoomArray.drinks) {
             var str2 = drink.strDrink!!.slice(0..0)
-            str2 = str2.decapitalize()
+            str2 = str2.decapitalize(Locale.ROOT)
             if (str2 == str1) {
                 listDrinks.add(drink)
                 Datamanager.drinks.add(drink)
-                println("!!! these are the drinks it was supposed to get from Cache: ${drink.strDrink}")
             }
         }
         adapter.notifyDataSetChanged()
         RoomArray.drinks.clear()
         showProgressBar(false)
+    }
+
+    fun getCashedDrinks(str:String) {
+        RoomArray.drinks.clear()
+        val allDrinks  = getAllDrinks()
+        launch {
+            allDrinks.await().forEach {
+                println("!!! Drink in cashe : ${it.strDrink}")
+                RoomArray.drinks.add(it)
+            }
+            sortArray(str)
+        }
+    }
+
+    private fun sortArray(str:String) {
+        val newList : MutableList<String> = mutableListOf()
+        val tempList : MutableList<Drink> = mutableListOf()
+        // skapar en lista med bara drinknamnen
+       for (drink in RoomArray.drinks){
+            newList.add(drink.strDrink!!)
+            }
+        // tar emot den sorterade listan med drinknamn (strängar)
+        val theSortedDrinks : MutableList<String> = mainSort(newList)
+        //går igenom varje cashad drink mot hela listan med sorterade drinknamn
+        // om den hittar samma namn som i drinkobjektet så lägger den dem i tempListan.
+        for (i in 0 until RoomArray.drinks.size){
+            for (j in 0 until RoomArray.drinks.size) {
+                if (theSortedDrinks[i] == RoomArray.drinks[j].strDrink!!) {
+                    tempList.add(RoomArray.drinks[j])
+                }
+            }
+        }
+        //tömmer cashade listan och skapar den igen med de nu sorterade drinkobjekten
+        RoomArray.drinks.clear()
+        RoomArray.drinks = tempList
+        checkStringOnCache(str)
     }
 
     private fun getAllDrinks() : Deferred<List<Drink>> =
@@ -220,15 +243,40 @@ class MainActivity() : BaseActivity(), CoroutineScope {
 
     private suspend fun switchToMain(){
         withContext(Dispatchers.Main){
-           // compareWithCache(counter2)
+           // går till huvudtråden i allDrinksAwait så denna funktion kommer nog inte behövas
        }
     }
 
-    private fun deleteEverything(){
-        async(Dispatchers.IO) {db.drinkDao().deleteAll()}
+    private fun deleteCache(){
+        async(Dispatchers.IO) {
+            db.drinkDao().deleteAll()
+        }
         println("!!! All deleted!")
     }
 
+    private fun mainSort(arr: MutableList<String>):MutableList<String> {
+        val sortedArray : MutableList<String> = mutableListOf()
+        val arraySize = arr.size
+        sortStrings(arr, arraySize)
+        for (i in 0 until arraySize) {
+            sortedArray.add(arr[i])
+        }
+        return sortedArray
+    }
+
+    private fun sortStrings(arr: MutableList<String>, arraySize: Int) {
+        var temp: String
+
+        for (j in 0 until arraySize - 1) {
+            for (i in j + 1 until arraySize) {
+                if (arr[j] > arr[i]) {
+                    temp = arr[j]
+                    arr[j] = arr[i]
+                    arr[i] = temp
+                }
+            }
+        }
+    }
 
 
 
