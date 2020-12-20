@@ -3,7 +3,7 @@ package com.poema.andreasmvvm.utils
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
-class RegistrationUtilTestTest{
+class CheckStringForCharUtilTestTest{
 
 
  /*   @Test
@@ -16,7 +16,7 @@ class RegistrationUtilTestTest{
 
     @Test
     fun `all strings contains sequence of chars returns true`(){
-        val result = RegistrationUtilTest.checkStringForChar(
+        val result = CheckStringForCharUtilTest.checkStringForChar(
             "a"
         )
         assertThat(result).isTrue()

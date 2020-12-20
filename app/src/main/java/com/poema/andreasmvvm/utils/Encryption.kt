@@ -15,6 +15,7 @@ import javax.crypto.spec.IvParameterSpec
 class Encryption {
 
     fun encrypt(context: Context, strToEncrypt: String): ByteArray {
+        println("KRYPTERING sträng att kryptera: $strToEncrypt")
         val plainText = strToEncrypt.toByteArray(Charsets.UTF_8)
         val keygen = KeyGenerator.getInstance("AES")
         keygen.init(256)
@@ -29,7 +30,8 @@ class Encryption {
         for (b in cipherText) {
             sb.append(b.toChar())
         }
-        Toast.makeText(context, "dbg encrypted = [" + sb.toString() + "]", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, " encrypted = [" + sb.toString() + "]", Toast.LENGTH_LONG).show()
+        println("KRYPTERING krypterad sträng: ${sb.toString()}")
         return cipherText
 
     }
@@ -44,7 +46,8 @@ class Encryption {
         for (b in cipherText) {
             sb.append(b.toChar())
         }
-        Toast.makeText(context, "dbg decrypted = [" + sb.toString() + "]", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, " decrypted = [" + sb.toString() + "]", Toast.LENGTH_LONG).show()
+        println("KRYPTERING avkrypterad sträng: ${sb.toString()}")
         return cipherText
 
     }
