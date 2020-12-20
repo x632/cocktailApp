@@ -22,5 +22,4 @@ interface DrinkDao {
 
     @Query("SELECT * FROM Drink WHERE idDrink = :drinkId LIMIT 1" )
     fun findDrinkById(drinkId: String) : Drink
-
 }

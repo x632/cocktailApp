@@ -17,6 +17,7 @@ import com.poema.andreasmvvm.viewmodel.MainViewModel
 import com.poema.andreasmvvm.viewmodel.DrinksViewModelFactory
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
+import java.util.*
 import kotlin.coroutines.CoroutineContext
 
 class MainActivity() : BaseActivity(), CoroutineScope {
@@ -45,14 +46,15 @@ class MainActivity() : BaseActivity(), CoroutineScope {
 
         recyclerview.adapter = adapter
 
-        //val myViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        //val myViewModel = ViewModelProvider(this).get(MainViewModel::class.java) // inte möjligt att få in medlemsvariabler till viewmodel med denna
         myViewModel = ViewModelProviders.of(this, DrinksViewModelFactory(this@MainActivity))
             .get(MainViewModel::class.java)
-        setErrStringObserver()//tar emot eventuella felmeddanden från repositoryn
-        setObserver()
+        setErrStringObserver()
+        setObserver()//observerar huvuddatat
         initSearch()
         setConnectionObserver()
     }
+
     private fun setErrStringObserver() {
         myViewModel.getString().observe(this@MainActivity, { t ->
             errorMessage = t
@@ -73,21 +75,21 @@ class MainActivity() : BaseActivity(), CoroutineScope {
             println("!!!! Internetstatus har ändrats (fr MainActivity: $connection")
         })
     }
-
+    //huvudfunktionen
     private fun initSearch() {
         val searchView = findViewById<SearchView>(R.id.search_view)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(p0: String?): Boolean {
-                if (p0!!.isEmpty()) return false
+            override fun onQueryTextSubmit(letter: String?): Boolean {
+                if (letter!!.isEmpty()) return false
                 else {
                     showProgressBar(true)
                     val conn : Boolean = (this@MainActivity.isInternetAvailable())
                     if (!conn){
-                    getCashedDrinks(p0)
+                    getCashedDrinks(letter)
                         return false
                     }
                     else{
-                    myViewModel.setLetta(p0)
+                    myViewModel.setLetter(letter)
                     }
                     return false
                 }
@@ -143,12 +145,12 @@ class MainActivity() : BaseActivity(), CoroutineScope {
     }
 
     private fun searchCacheByName(str:String) {
-        var str1 = str.decapitalize()
+        var str1 = str.decapitalize(Locale.ROOT)
         listDrinks.clear()
         Datamanager.drinks.clear()
         for (drink in RoomArray.drinks){
             var str2 = drink.strDrink!!
-            str2 = str2.decapitalize()
+            str2 = str2.decapitalize(Locale.ROOT)
             if(str2.contains(str1)){
                 listDrinks.add(drink)
                 Datamanager.drinks.add(drink)
@@ -161,10 +163,10 @@ class MainActivity() : BaseActivity(), CoroutineScope {
     private fun serachCacheByLetter(str:String) {
         listDrinks.clear()
         Datamanager.drinks.clear()
-        var str1 = str.decapitalize()
+        var str1 = str.decapitalize(Locale.ROOT)
         for (drink in RoomArray.drinks) {
             var str2 = drink.strDrink!!.slice(0..0)
-            str2 = str2.decapitalize()
+            str2 = str2.decapitalize(Locale.ROOT)
             if (str2 == str1) {
                 listDrinks.add(drink)
                 Datamanager.drinks.add(drink)
@@ -190,15 +192,12 @@ class MainActivity() : BaseActivity(), CoroutineScope {
     private fun sortArray(str:String) {
         val newList : MutableList<String> = mutableListOf()
         val tempList : MutableList<Drink> = mutableListOf()
-        var stringArray : Array<String> = arrayOf<String>()
-        // skapar en mutable list med bara drinknamnen
+        // skapar en lista med bara drinknamnen
        for (drink in RoomArray.drinks){
             newList.add(drink.strDrink!!)
             }
-        // gör den till en "typad" array (med fixerad storlek)
-        stringArray = newList.toTypedArray()
-        // tar emot den sorterade mutable(!) listan med drinknamn (strängar)
-        val theSortedDrinks : MutableList<String> = main(stringArray)
+        // tar emot den sorterade listan med drinknamn (strängar)
+        val theSortedDrinks : MutableList<String> = mainSort(newList)
         //går igenom varje cashad drink mot hela listan med sorterade drinknamn
         // om den hittar samma namn som i drinkobjektet så lägger den dem i tempListan.
         for (i in 0 until RoomArray.drinks.size){
@@ -221,7 +220,7 @@ class MainActivity() : BaseActivity(), CoroutineScope {
 
     private suspend fun switchToMain(){
         withContext(Dispatchers.Main){
-           // går till huvudtråden i allDrinksAwait (tror jag) så denna func kommer nog inte behövas
+           // går till huvudtråden i allDrinksAwait så denna funktion kommer nog inte behövas
        }
     }
 
@@ -232,7 +231,17 @@ class MainActivity() : BaseActivity(), CoroutineScope {
         println("!!! All deleted!")
     }
 
-    fun sortStrings(arr: Array<String>, arraySize: Int) {
+    private fun mainSort(arr: MutableList<String>):MutableList<String> {
+        val sortedArray : MutableList<String> = mutableListOf()
+        val arraySize = arr.size
+        sortStrings(arr, arraySize)
+        for (i in 0 until arraySize) {
+            sortedArray.add(arr[i])
+        }
+        return sortedArray
+    }
+
+    private fun sortStrings(arr: MutableList<String>, arraySize: Int) {
         var temp: String
 
         for (j in 0 until arraySize - 1) {
@@ -244,18 +253,6 @@ class MainActivity() : BaseActivity(), CoroutineScope {
                 }
             }
         }
-    }
-
-    private fun main(args: Array<String>):MutableList<String> {
-        var sortedArray : MutableList<String> = mutableListOf()
-        val arr = args
-        val arraySize = arr.size
-        sortStrings(arr, arraySize)
-        for (i in 0 until arraySize) {
-            println("!!! String " + (i + 1) + " is " + arr[i])
-            sortedArray.add(arr[i])
-        }
-       return sortedArray
     }
 
 }

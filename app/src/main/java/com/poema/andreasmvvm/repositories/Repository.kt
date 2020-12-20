@@ -14,7 +14,9 @@ object Repository {
 
     //var job: CompletableJob? = null
     var errMessString = MutableLiveData<String>()
+
     var iConnection = MutableLiveData<Boolean>()
+
     fun getMutableLiveData(letter: String): MutableLiveData<ArrayList<Drink>> {
         iConnection.value = true
         val mutableLiveData = MutableLiveData<ArrayList<Drink>>()
@@ -89,6 +91,11 @@ object Repository {
         return iConnection
     }
 }
+
+
+
+
+
     /*fun getDrinks(letter: String): MutableLiveData<ArrayList<Drink>> {
         job = Job()
         return object: MutableLiveData<ArrayList<Drink>>(){

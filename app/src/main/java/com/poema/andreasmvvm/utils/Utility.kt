@@ -12,10 +12,9 @@ object Utility {
             val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val netInfo = cm.activeNetworkInfo
             return if (netInfo != null && netInfo.isConnected) {
-                println("!!!Varit här i utils i är uppkopplat 'truevillkoret'")
                 true
             } else {
-                showErrorToast("Internet not available. Please check your connection! Restricted to cached drinks!")
+                showErrorToast("Internet not available. Restricted to cached drinks. Please check your connection!")
                 false
             }
     }

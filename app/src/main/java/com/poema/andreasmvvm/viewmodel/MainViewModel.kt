@@ -20,14 +20,10 @@ class MainViewModel(context:Context) : ViewModel() {
 
 
 
-    private val _letta: MutableLiveData<String> = MutableLiveData()
-    //private val _search: MutableLiveData<String> = MutableLiveData()
-    //private var listData = MutableLiveData<ArrayList<Drink>>()
-    //private var otherData = MutableLiveData<String>()
-    //var iConnection = MutableLiveData<Boolean>()
+    private val _letter: MutableLiveData<String> = MutableLiveData()
 
 
-    val listData: LiveData<ArrayList<Drink>>? = Transformations.switchMap(_letta) {
+    private val listData: LiveData<ArrayList<Drink>>? = Transformations.switchMap(_letter) {
         if (context.isInternetAvailable() && it.length < 2 && it.isNotEmpty()) {
             Repository.getMutableLiveData(it)
         } else if (context.isInternetAvailable() && it.length>1 && it != "fav") {
@@ -37,23 +33,41 @@ class MainViewModel(context:Context) : ViewModel() {
         }
     }
 
-    val otherData: MutableLiveData<String> = Transformations.switchMap(_letta) {
+    private val otherData: MutableLiveData<String> = Transformations.switchMap(_letter) {
         Repository.getErrorMessage()
     } as MutableLiveData<String>
 
-    val iConnection: MutableLiveData<Boolean> = Transformations.switchMap(_letta) {
+    private val iConnection: MutableLiveData<Boolean> = Transformations.switchMap(_letter) {
         Repository.getiConnection()
     } as MutableLiveData<Boolean>
 
 
-    /*
-      init {
-          val drinkRepository: Repository by lazy {
-              Repository
-          }
-          //iConnection.value = true
-          otherData = drinkRepository.errMessString
-          }*/
+
+    fun getData(): LiveData<ArrayList<Drink>>? {
+        return listData
+    }
+    fun getString(): MutableLiveData<String>{
+        return otherData
+    }
+    fun getBoolean(): MutableLiveData<Boolean>{
+        return iConnection
+    }
+
+
+    fun setLetter(letter: String){
+        _letter.value = letter
+    }
+
+}
+
+/*
+   init {
+       val drinkRepository: Repository by lazy {
+           Repository
+       }
+       //iConnection.value = true
+       otherData = drinkRepository.errMessString
+       }*/
 
 /*
         if (context.isInternetAvailable() && letter.length < 2 && letter.length > 0) {
@@ -67,27 +81,3 @@ class MainViewModel(context:Context) : ViewModel() {
         }
     }
 */
-
-    fun getData(): LiveData<ArrayList<Drink>>? {
-        return listData
-    }
-    fun getString(): MutableLiveData<String>{
-        return otherData
-    }
-    fun getBoolean(): MutableLiveData<Boolean>{
-        return iConnection
-    }
-
-
-    fun setLetta(letta: String){
-        val update = letta
-       /* if (_letta.value == update) {
-            return
-        }*/
-        _letta.value = update
-    }
-
-
-
-}
-
