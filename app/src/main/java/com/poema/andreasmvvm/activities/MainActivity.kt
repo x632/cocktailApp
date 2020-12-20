@@ -19,6 +19,18 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.coroutines.CoroutineContext
+import android.content.Context
+import android.preference.PreferenceManager
+import com.poema.andreasmvvm.utils.Encryption
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.ObjectInputStream
+import java.io.ObjectOutputStream
+import javax.crypto.Cipher
+import javax.crypto.KeyGenerator
+import javax.crypto.SecretKey
+import javax.crypto.spec.IvParameterSpec
+
 
 class MainActivity() : BaseActivity(), CoroutineScope {
 
@@ -35,6 +47,17 @@ class MainActivity() : BaseActivity(), CoroutineScope {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        /*
+             *  Encrypting och decrypting
+         */
+
+        val secretString = "this is the secret string!"
+        val encryptedString = Encryption().encrypt(this, secretString)
+        Encryption().decrypt(this, encryptedString)
+
+
+
         recyclerview.layoutManager = LinearLayoutManager(this@MainActivity)
         listDrinks = mutableListOf()
         job = Job()
@@ -254,6 +277,9 @@ class MainActivity() : BaseActivity(), CoroutineScope {
             }
         }
     }
+
+
+
 
 }
 
