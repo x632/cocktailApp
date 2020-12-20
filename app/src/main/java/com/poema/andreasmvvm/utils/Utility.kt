@@ -7,16 +7,14 @@ import android.widget.Toast
 
 object Utility {
 
-
     fun Context.isInternetAvailable(): Boolean {
 
             val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             val netInfo = cm.activeNetworkInfo
             return if (netInfo != null && netInfo.isConnected) {
-                println("!!!Varit här i utils i är uppkopplat 'truevillkoret'")
                 true
             } else {
-                showErrorToast("Internet not available. Please check your connection!")
+                showErrorToast("Internet not available. Restricted to cached drinks. Please check your connection!")
                 false
             }
     }

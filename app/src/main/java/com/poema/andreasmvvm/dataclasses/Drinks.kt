@@ -10,6 +10,7 @@ data class Drinks(
 )
 @Entity
 data class Drink(
+
     @PrimaryKey(autoGenerate = true)
     val roomId:Long,
     val dateModified: String?,
