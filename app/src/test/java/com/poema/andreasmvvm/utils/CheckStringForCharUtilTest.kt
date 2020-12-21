@@ -11,18 +11,18 @@ object CheckStringForCharUtilTest {
         drinkname: String
     ): Boolean {
 
-       for (drink in existingDrinks){
-           if (drink.contains(drinkname)){
-               println("!!! $drink")
+        for (drink in existingDrinks){
+            if (drink.contains(drinkname)){
+                println("!!! $drink")
 
-           }
-           else {
-               println("!!! alla drinkar inehåller inte char sequensen")
-               return false
-           }
+            }
+            else {
+                println("!!! alla drinkar inehåller inte char sequensen")
+                return false
+            }
 
-       }
-       return true
+        }
+        return true
     }
 }
 
