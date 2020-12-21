@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 import com.poema.andreasmvvm.dataclasses.Drink
 
 
-@Database(entities = [Drink::class], version = 29)
+@Database(entities = [Drink::class], version = 31)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun drinkDao(): DrinkDao
 }

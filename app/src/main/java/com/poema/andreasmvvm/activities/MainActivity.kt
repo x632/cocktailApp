@@ -113,6 +113,12 @@ class MainActivity() : BaseActivity(), CoroutineScope {
         })
     }
 
+    fun checkAlphabeticOrder(): Boolean{
+        val drinkNum1 = "vodkamartini"
+        val drinkNum2 = "vodkalime"
+        return drinkNum1 > drinkNum2
+    }
+
     private fun setObserver() {
         myViewModel.getData()?.observe(this@MainActivity, { t ->
             listDrinks.clear()
@@ -158,12 +164,12 @@ class MainActivity() : BaseActivity(), CoroutineScope {
     }
 
     private fun searchCacheByName(str:String) {
-        val str1 = str.decapitalize(Locale.ROOT)
+        val str1 = str.decapitalize()
         listDrinks.clear()
         Datamanager.drinks.clear()
         for (drink in RoomArray.drinks){
             var str2 = drink.strDrink!!
-            str2 = str2.decapitalize(Locale.ROOT)
+            str2 = str2.decapitalize()
             if(str2.contains(str1)){
                 listDrinks.add(drink)
                 Datamanager.drinks.add(drink)
@@ -176,10 +182,10 @@ class MainActivity() : BaseActivity(), CoroutineScope {
     private fun serachCacheByLetter(str:String) {
         listDrinks.clear()
         Datamanager.drinks.clear()
-        val str1 = str.decapitalize(Locale.ROOT)
+        val str1 = str.decapitalize()
         for (drink in RoomArray.drinks) {
             var str2 = drink.strDrink!!.slice(0..0)
-            str2 = str2.decapitalize(Locale.ROOT)
+            str2 = str2.decapitalize()
             if (str2 == str1) {
                 listDrinks.add(drink)
                 Datamanager.drinks.add(drink)
@@ -212,7 +218,8 @@ class MainActivity() : BaseActivity(), CoroutineScope {
         // tar emot den sorterade listan med drinknamn (strängar)
         val theSortedDrinks : MutableList<String> = mainSort(newList)
         //går igenom varje cashad drink mot hela listan med sorterade drinknamn
-        // om den hittar samma namn som i drinkobjektet så lägger den dem i tempListan.
+        // om den hittar samma namn som i drinkobjektet så lägger den dem i tempListan
+        // och de hamnar därmed i alfabetisk ordning eller på samma sätt som i arrayn som är sorterad.
         for (i in 0 until RoomArray.drinks.size){
             for (j in 0 until RoomArray.drinks.size) {
                 if (theSortedDrinks[i] == RoomArray.drinks[j].strDrink!!) {
