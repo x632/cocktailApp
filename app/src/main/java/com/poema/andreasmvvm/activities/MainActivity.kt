@@ -58,6 +58,7 @@ class MainActivity() : BaseActivity(), CoroutineScope {
 
 
 
+
         recyclerview.layoutManager = LinearLayoutManager(this@MainActivity)
         listDrinks = mutableListOf()
         job = Job()
@@ -99,7 +100,7 @@ class MainActivity() : BaseActivity(), CoroutineScope {
         })
     }
     //huvudfunktionen
-    private fun initSearch() {
+     fun initSearch() {
         val searchView = findViewById<SearchView>(R.id.search_view)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(letter: String?): Boolean {
@@ -121,6 +122,15 @@ class MainActivity() : BaseActivity(), CoroutineScope {
                 return false
             }
         })
+    }
+
+
+    fun checkAlphabeticOrder(): Boolean{
+        val drinkNum1 = "vodkamartini"
+        val drinkNum2 = "vodkalime"
+        if (drinkNum1 > drinkNum2){
+            return true
+        }else{ return false }
     }
 
     private fun setObserver() {
@@ -212,7 +222,7 @@ class MainActivity() : BaseActivity(), CoroutineScope {
         }
     }
 
-    private fun sortArray(str:String) {
+     fun sortArray(str:String) {
         val newList : MutableList<String> = mutableListOf()
         val tempList : MutableList<Drink> = mutableListOf()
         // skapar en lista med bara drinknamnen
