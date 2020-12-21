@@ -19,17 +19,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.coroutines.CoroutineContext
-import android.content.Context
-import android.preference.PreferenceManager
 import com.poema.andreasmvvm.utils.Encryption
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
-import javax.crypto.Cipher
-import javax.crypto.KeyGenerator
-import javax.crypto.SecretKey
-import javax.crypto.spec.IvParameterSpec
+
 
 
 class MainActivity() : BaseActivity(), CoroutineScope {
@@ -55,8 +46,6 @@ class MainActivity() : BaseActivity(), CoroutineScope {
         val secretString = "this is the secret string!"
         val encryptedString = Encryption().encrypt(this, secretString)
         Encryption().decrypt(this, encryptedString)
-
-
 
         recyclerview.layoutManager = LinearLayoutManager(this@MainActivity)
         listDrinks = mutableListOf()
@@ -98,6 +87,7 @@ class MainActivity() : BaseActivity(), CoroutineScope {
             println("!!!! Internetstatus har ändrats (fr MainActivity: $connection")
         })
     }
+    
     //huvudfunktionen
     private fun initSearch() {
         val searchView = findViewById<SearchView>(R.id.search_view)
@@ -145,10 +135,10 @@ class MainActivity() : BaseActivity(), CoroutineScope {
         async(Dispatchers.IO) {
             for (i in 0 until listDrinks.size) {
                 val id = "${listDrinks[i].idDrink}"
-                val numb = db.drinkDao().findDrinkById(id)       //insert(listDrinks[i])
+                val numb = db.drinkDao().findDrinkById(id)
                 if (numb == null) {
                     val savedDrinkNum = db.drinkDao().insert(listDrinks[i])
-                    println("!!! Drink: ${listDrinks[i].strDrink} with number $savedDrinkNum is saved in cache. number is $i")
+                    println("!!! Drink: ${listDrinks[i].strDrink} with number $savedDrinkNum has been saved in cache. number is $i")
                     println("!!! Arraysize is :${listDrinks.size}")
                 } else {
                     println("!!! Drink: ${listDrinks[i].strDrink} is already in cache number is $i")
@@ -168,7 +158,7 @@ class MainActivity() : BaseActivity(), CoroutineScope {
     }
 
     private fun searchCacheByName(str:String) {
-        var str1 = str.decapitalize(Locale.ROOT)
+        val str1 = str.decapitalize(Locale.ROOT)
         listDrinks.clear()
         Datamanager.drinks.clear()
         for (drink in RoomArray.drinks){
@@ -186,7 +176,7 @@ class MainActivity() : BaseActivity(), CoroutineScope {
     private fun serachCacheByLetter(str:String) {
         listDrinks.clear()
         Datamanager.drinks.clear()
-        var str1 = str.decapitalize(Locale.ROOT)
+        val str1 = str.decapitalize(Locale.ROOT)
         for (drink in RoomArray.drinks) {
             var str2 = drink.strDrink!!.slice(0..0)
             str2 = str2.decapitalize(Locale.ROOT)
@@ -277,9 +267,6 @@ class MainActivity() : BaseActivity(), CoroutineScope {
             }
         }
     }
-
-
-
 
 }
 

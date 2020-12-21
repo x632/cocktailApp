@@ -1,6 +1,8 @@
 package com.poema.andreasmvvm.utils
 
 import com.google.common.truth.Truth.assertThat
+import com.poema.andreasmvvm.activities.MainActivity
+import com.poema.andreasmvvm.utils.Utility.isInternetAvailable
 import org.junit.Test
 
 class CheckStringForCharUtilTestTest{
