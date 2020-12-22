@@ -19,17 +19,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import java.util.*
 import kotlin.coroutines.CoroutineContext
-import android.content.Context
-import android.preference.PreferenceManager
 import com.poema.andreasmvvm.utils.Encryption
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.ObjectInputStream
-import java.io.ObjectOutputStream
-import javax.crypto.Cipher
-import javax.crypto.KeyGenerator
-import javax.crypto.SecretKey
-import javax.crypto.spec.IvParameterSpec
+
 
 
 class MainActivity() : BaseActivity(), CoroutineScope {
@@ -55,9 +46,6 @@ class MainActivity() : BaseActivity(), CoroutineScope {
         val secretString = "this is the secret string!"
         val encryptedString = Encryption().encrypt(this, secretString)
         Encryption().decrypt(this, encryptedString)
-
-
-
 
         recyclerview.layoutManager = LinearLayoutManager(this@MainActivity)
         listDrinks = mutableListOf()
@@ -99,8 +87,9 @@ class MainActivity() : BaseActivity(), CoroutineScope {
             println("!!!! Internetstatus har ändrats (fr MainActivity: $connection")
         })
     }
+    
     //huvudfunktionen
-     fun initSearch() {
+    private fun initSearch() {
         val searchView = findViewById<SearchView>(R.id.search_view)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(letter: String?): Boolean {
@@ -124,13 +113,10 @@ class MainActivity() : BaseActivity(), CoroutineScope {
         })
     }
 
-
     fun checkAlphabeticOrder(): Boolean{
         val drinkNum1 = "vodkamartini"
         val drinkNum2 = "vodkalime"
-        if (drinkNum1 > drinkNum2){
-            return true
-        }else{ return false }
+        return drinkNum1 > drinkNum2
     }
 
     private fun setObserver() {
@@ -155,10 +141,10 @@ class MainActivity() : BaseActivity(), CoroutineScope {
         async(Dispatchers.IO) {
             for (i in 0 until listDrinks.size) {
                 val id = "${listDrinks[i].idDrink}"
-                val numb = db.drinkDao().findDrinkById(id)       //insert(listDrinks[i])
+                val numb = db.drinkDao().findDrinkById(id)
                 if (numb == null) {
                     val savedDrinkNum = db.drinkDao().insert(listDrinks[i])
-                    println("!!! Drink: ${listDrinks[i].strDrink} with number $savedDrinkNum is saved in cache. number is $i")
+                    println("!!! Drink: ${listDrinks[i].strDrink} with number $savedDrinkNum has been saved in cache. number is $i")
                     println("!!! Arraysize is :${listDrinks.size}")
                 } else {
                     println("!!! Drink: ${listDrinks[i].strDrink} is already in cache number is $i")
@@ -178,12 +164,12 @@ class MainActivity() : BaseActivity(), CoroutineScope {
     }
 
     private fun searchCacheByName(str:String) {
-        var str1 = str.decapitalize(Locale.ROOT)
+        val str1 = str.decapitalize()
         listDrinks.clear()
         Datamanager.drinks.clear()
         for (drink in RoomArray.drinks){
             var str2 = drink.strDrink!!
-            str2 = str2.decapitalize(Locale.ROOT)
+            str2 = str2.decapitalize()
             if(str2.contains(str1)){
                 listDrinks.add(drink)
                 Datamanager.drinks.add(drink)
@@ -196,10 +182,10 @@ class MainActivity() : BaseActivity(), CoroutineScope {
     private fun serachCacheByLetter(str:String) {
         listDrinks.clear()
         Datamanager.drinks.clear()
-        var str1 = str.decapitalize(Locale.ROOT)
+        val str1 = str.decapitalize()
         for (drink in RoomArray.drinks) {
             var str2 = drink.strDrink!!.slice(0..0)
-            str2 = str2.decapitalize(Locale.ROOT)
+            str2 = str2.decapitalize()
             if (str2 == str1) {
                 listDrinks.add(drink)
                 Datamanager.drinks.add(drink)
@@ -222,7 +208,7 @@ class MainActivity() : BaseActivity(), CoroutineScope {
         }
     }
 
-     fun sortArray(str:String) {
+    private fun sortArray(str:String) {
         val newList : MutableList<String> = mutableListOf()
         val tempList : MutableList<Drink> = mutableListOf()
         // skapar en lista med bara drinknamnen
@@ -232,7 +218,8 @@ class MainActivity() : BaseActivity(), CoroutineScope {
         // tar emot den sorterade listan med drinknamn (strängar)
         val theSortedDrinks : MutableList<String> = mainSort(newList)
         //går igenom varje cashad drink mot hela listan med sorterade drinknamn
-        // om den hittar samma namn som i drinkobjektet så lägger den dem i tempListan.
+        // om den hittar samma namn som i drinkobjektet så lägger den dem i tempListan
+        // och de hamnar därmed i alfabetisk ordning eller på samma sätt som i arrayn som är sorterad.
         for (i in 0 until RoomArray.drinks.size){
             for (j in 0 until RoomArray.drinks.size) {
                 if (theSortedDrinks[i] == RoomArray.drinks[j].strDrink!!) {
@@ -287,9 +274,6 @@ class MainActivity() : BaseActivity(), CoroutineScope {
             }
         }
     }
-
-
-
 
 }
 
