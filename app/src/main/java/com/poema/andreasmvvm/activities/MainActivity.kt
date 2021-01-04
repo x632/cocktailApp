@@ -21,7 +21,9 @@ import java.util.*
 import kotlin.coroutines.CoroutineContext
 import android.content.Context
 import android.preference.PreferenceManager
+import android.util.Base64.encodeToString
 import com.poema.andreasmvvm.utils.Encryption
+import com.poema.andreasmvvm.utils.Encryption2
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.ObjectInputStream
@@ -44,6 +46,9 @@ class MainActivity() : BaseActivity(), CoroutineScope {
     private var errorMessage: String = ""
 
 
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -51,7 +56,7 @@ class MainActivity() : BaseActivity(), CoroutineScope {
         /*
              *  Encrypting och decrypting
          */
-
+        
         val secretString = "this is the secret string!"
         val encryptedString = Encryption().encrypt(this, secretString)
         Encryption().decrypt(this, encryptedString)

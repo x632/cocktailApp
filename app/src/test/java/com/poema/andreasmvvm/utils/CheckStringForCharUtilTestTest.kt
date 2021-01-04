@@ -1,7 +1,10 @@
 package com.poema.andreasmvvm.utils
 
+
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
+import java.util.*
+import android.util.Base64.encodeToString
 
 class CheckStringForCharUtilTestTest{
 
@@ -21,5 +24,6 @@ class CheckStringForCharUtilTestTest{
         )
         assertThat(result).isTrue()
     }
+
 
 }
